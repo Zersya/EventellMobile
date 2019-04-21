@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'utility.dart';
+import '../utility.dart';
 
 class HomePage extends StatefulWidget {
   @override

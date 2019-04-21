@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'home.screen.dart';
-import 'utility.dart';
+import '../utility.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './screens/main.screen.dart';
+import './screens/main/main.screen.dart';
+import './screens/authentication/main.screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,10 +9,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Eventell',
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
-      ),
-      home: MainPage(),
+     
+      home: MainAuth(),
     );
   }
 }
