@@ -15,6 +15,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   Stream<RegisterState> mapEventToState(
     RegisterEvent event,
   ) async* {
+    yield LoadingRegisterState();
+    
     try {
       yield await event.applyAsync(currentState: currentState, bloc: this);
     } catch (_) {

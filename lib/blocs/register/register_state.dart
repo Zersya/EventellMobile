@@ -35,12 +35,36 @@ class ErrorRegisterState extends RegisterState {
   final String errorMessage;
 
   ErrorRegisterState(this.errorMessage);
-  
+
   @override
   String toString() => 'ErrorRegisterState';
 
   @override
   RegisterState getStateCopy() {
     return ErrorRegisterState(this.errorMessage);
+  }
+}
+
+class LoadingRegisterState extends RegisterState {
+  @override
+  String toString() => 'LoadingRegisterState';
+
+  @override
+  RegisterState getStateCopy() {
+    return LoadingRegisterState();
+  }
+}
+
+class SuccessRegisterState extends RegisterState {
+  final String successMessage;
+
+  SuccessRegisterState(this.successMessage);
+
+  @override
+  String toString() => 'SuccessRegisterState';
+
+  @override
+  RegisterState getStateCopy() {
+    return SuccessRegisterState(this.successMessage);
   }
 }

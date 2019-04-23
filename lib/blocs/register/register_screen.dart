@@ -44,7 +44,9 @@ class RegisterScreenState extends State<RegisterScreen> {
             'REGISTER',
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
-          FormRegister(registerBloc: widget._registerBloc,),
+          FormRegister(
+            registerBloc: widget._registerBloc,
+          ),
         ],
       ),
     );
@@ -160,6 +162,8 @@ class _FormRegisterState extends State<FormRegister> {
               ),
               validator: (val) {
                 if (val.isEmpty) return 'Fill the confirmation password field';
+                if (val != _passwordController.text)
+                  return 'Password is not same';
               },
             ),
           ),
@@ -173,49 +177,64 @@ class _FormRegisterState extends State<FormRegister> {
   }
 
   Widget btnSubmit() {
-    return BlocBuilder<RegisterEvent, RegisterState>(
-        bloc: widget.registerBloc,
-        builder: (
-          BuildContext context,
-          RegisterState currentState,
-        ) {
-          if (currentState is UnRegisterState) {
-            return Center(
-              child: CircularProgressIndicator(),
+    return BlocListener(
+      bloc: widget.registerBloc,
+      listener: (BuildContext context, RegisterState currentState) {
+        if(currentState is SuccessRegisterState){
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: new Text(currentState.successMessage ?? 'Success'),
+          ));
+        }
+        if (currentState is ErrorRegisterState) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: new Text(currentState.errorMessage ?? 'Error'),
+          ));
+        }
+      },
+      child: BlocBuilder<RegisterEvent, RegisterState>(
+          bloc: widget.registerBloc,
+          builder: (
+            BuildContext context,
+            RegisterState currentState,
+          ) {
+            if (currentState is UnRegisterState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (currentState is LoadingRegisterState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Material(
+              elevation: 10,
+              shadowColor: Colors.black87,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: FlatButton.icon(
+                    color: Coloring.colorRegister,
+                    icon: Icon(
+                      MdiIcons.login,
+                      color: Coloring.colorLoginText,
+                    ),
+                    onPressed: _onLogin,
+                    label: Text(
+                      'REGISTER',
+                      style: TextStyle(color: Coloring.colorLoginText),
+                    )),
+              ),
             );
-          }
-          if (currentState is ErrorRegisterState) {
-            return new Container(
-                child: new Center(
-              child: new Text(currentState.errorMessage ?? 'Error'),
-            ));
-          }
-          return Material(
-            elevation: 10,
-            shadowColor: Colors.black87,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: FlatButton.icon(
-                  color: Coloring.colorRegister,
-                  icon: Icon(
-                    MdiIcons.login,
-                    color: Coloring.colorLoginText,
-                  ),
-                  onPressed: _onLogin,
-                  label: Text(
-                    'REGISTER',
-                    style: TextStyle(color: Coloring.colorLoginText),
-                  )),
-            ),
-          );
-        });
+          }),
+    );
   }
 
   void _onLogin() {
     if (_formKey.currentState.validate()) {
-      // _emailController.text = 'zeinersyad';
-      // _passwordController.text = '123456';
+      widget.registerBloc.dispatch(
+          SubmitRegisterEvent(_emailController.text, _passwordController.text));
     }
   }
 }
