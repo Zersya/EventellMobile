@@ -1,5 +1,5 @@
 name: eventell
-description: A new Flutter project.
+description: project tentang pengelolaan event di kampus
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -25,7 +25,10 @@ dependencies:
   cupertino_icons: ^0.1.2
   material_design_icons_flutter: ^3.2.3595
   page_indicator: ^0.2.0
-
+  cloud_firestore: ^0.9.13+1
+  flutter_bloc: ^0.11.1
+  bloc: ^0.12.0
+  equatable: ^0.2.3
 
 dev_dependencies:
   flutter_test:

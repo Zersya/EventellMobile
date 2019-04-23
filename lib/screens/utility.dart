@@ -24,9 +24,9 @@ class Coloring{
   static const Color colorAppbar = Colors.transparent;
   static const Color colorMain = Color.fromRGBO(255, 214, 0, 1);
   //=================AUTH===========================
-  static const Color colorLogin = Color.fromRGBO(255, 111, 0, 1);
-  // static const Color colorRegister = Color.fromRGBO(13, 71, 161, 1);
-  static const Color colorRegister = Colors.indigo;
+  static const Color colorLogin = Color.fromRGBO(251, 192, 45, 1);
+  static const Color colorLoginText = Colors.black87;
+  static const Color colorRegister = Color.fromRGBO(255, 242, 99, 1);
 
 }
 

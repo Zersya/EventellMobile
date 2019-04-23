@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'register.screen.dart';
+import '../../blocs/register/index.dart';
 import 'login.screen.dart';
 import '../utility.dart';
 
@@ -13,10 +13,9 @@ class _MainAuthState extends State<MainAuth>
   var currentForm = 0;
   AnimationController _animationController;
 
-  List<Widget> formWidget = [
-    LoginForm(),
-    RegistrationForm(),
-  ];
+  RegisterBloc _registerBloc;
+
+  List<Widget> formWidget;
 
   List<Color> colorBackground = [
     Coloring.colorRegister,
@@ -45,9 +44,7 @@ class _MainAuthState extends State<MainAuth>
         Tween<Offset>(begin: Offset(-1050, 0), end: Offset(0, 0)).animate(
             CurvedAnimation(
                 parent: _animationController, curve: Curves.fastOutSlowIn));
-    _animationController.addListener(() {
-      print(_animationController.status);
-    });
+
     translateFormRegister =
         Tween<Offset>(begin: Offset(0, 0), end: Offset(1050, 0)).animate(
             CurvedAnimation(
@@ -56,6 +53,15 @@ class _MainAuthState extends State<MainAuth>
       print(_animationController.status);
     });
     _animationController.forward();
+    
+    _registerBloc = RegisterBloc();
+    formWidget = [
+      LoginForm(),
+      RegisterScreen(
+        registerBloc: _registerBloc,
+      ),
+    ];
+
     super.initState();
   }
 
@@ -68,23 +74,29 @@ class _MainAuthState extends State<MainAuth>
               backgroundColor: background
                   .evaluate(AlwaysStoppedAnimation(_animationController.value)),
               body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 50,),
-                    headerBuild(),
-                    Expanded(
-                      child: Stack(children: <Widget>[
-                        Transform.translate(
-                            offset: translateFormLogin.value,
-                            child: LoginForm()),
-                        Transform.translate(
-                            offset: translateFormRegister.value,
-                            child: RegistrationForm()),
-                      ]),
-                    )
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 50,
+                      ),
+                      headerBuild(),
+                      SizedBox(
+                        child: Stack(children: <Widget>[
+                          Transform.translate(
+                              offset: translateFormLogin.value,
+                              child: LoginForm()),
+                          Transform.translate(
+                              offset: translateFormRegister.value,
+                              child: RegisterScreen(
+                                registerBloc: _registerBloc,
+                              )),
+                        ]),
+                      )
+                    ],
+                  ),
                 ),
               ));
         });
@@ -136,6 +148,7 @@ class _MainAuthState extends State<MainAuth>
 
   Text textHeadBuild(string) {
     return Text(string,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+        style: TextStyle(
+            color: Coloring.colorLoginText, fontWeight: FontWeight.bold));
   }
 }

@@ -12,7 +12,15 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(Sizing.paddingContent),
-      child: FormLogin(),
+      child: Column(
+        children: <Widget>[
+          Text(
+            'LOGIN',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          FormLogin(),
+        ],
+      ),
     );
   }
 }
@@ -33,6 +41,8 @@ class _FormLoginState extends State<FormLogin> {
 
   var _passwordController = TextEditingController();
 
+  FocusNode _passwordFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,6 +59,7 @@ class _FormLoginState extends State<FormLogin> {
             borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
             shadowColor: Colors.black54,
             child: TextFormField(
+              textInputAction: TextInputAction.next,
               controller: _emailController,
               decoration: InputDecoration(
                 fillColor: Color.fromRGBO(233, 233, 233, 1),
@@ -63,6 +74,9 @@ class _FormLoginState extends State<FormLogin> {
               validator: ((val) {
                 if (val.isEmpty) return 'Fill the email field';
               }),
+              onFieldSubmitted: (value){
+                FocusScope.of(context).requestFocus(_passwordFocus);
+              },
             ),
           ),
           SizedBox(
@@ -73,6 +87,7 @@ class _FormLoginState extends State<FormLogin> {
             borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
             shadowColor: Colors.black54,
             child: TextFormField(
+              focusNode: _passwordFocus,
               controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
@@ -99,20 +114,24 @@ class _FormLoginState extends State<FormLogin> {
   }
 
   Widget btnSubmit() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: 50,
-      child: FlatButton.icon(
-          color: Coloring.colorLogin,
-          icon: Icon(
-            MdiIcons.login,
-            color: Colors.white,
-          ),
-          onPressed: _onLogin,
-          label: Text(
-            'LOGIN',
-            style: TextStyle(color: Colors.white),
-          )),
+    return Material(
+      elevation: 10,
+      shadowColor: Colors.black87,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        child: FlatButton.icon(
+            color: Coloring.colorLogin,
+            icon: Icon(
+              MdiIcons.login,
+              color: Coloring.colorLoginText,
+            ),
+            onPressed: _onLogin,
+            label: Text(
+              'LOGIN',
+              style: TextStyle(color: Coloring.colorLoginText),
+            )),
+      ),
     );
   }
 
