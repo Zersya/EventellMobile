@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../blocs/register/index.dart';
-import 'login.screen.dart';
-import '../utility.dart';
+import 'package:eventell/blocs/register/index.dart';
+import 'package:eventell/blocs/login/index.dart';
+import 'package:eventell/screens/utility.dart';
 
 class MainAuth extends StatefulWidget {
   @override
@@ -14,6 +14,7 @@ class _MainAuthState extends State<MainAuth>
   AnimationController _animationController;
 
   RegisterBloc _registerBloc;
+  LoginBloc _loginBloc;
 
   List<Widget> formWidget;
 
@@ -53,10 +54,13 @@ class _MainAuthState extends State<MainAuth>
       print(_animationController.status);
     });
     _animationController.forward();
-    
+
     _registerBloc = RegisterBloc();
+    _loginBloc = LoginBloc();
     formWidget = [
-      LoginForm(),
+      LoginScreen(
+        loginBloc: _loginBloc,
+      ),
       RegisterScreen(
         registerBloc: _registerBloc,
       ),
@@ -87,7 +91,9 @@ class _MainAuthState extends State<MainAuth>
                         child: Stack(children: <Widget>[
                           Transform.translate(
                               offset: translateFormLogin.value,
-                              child: LoginForm()),
+                              child: LoginScreen(
+                                loginBloc: _loginBloc,
+                              )),
                           Transform.translate(
                               offset: translateFormRegister.value,
                               child: RegisterScreen(

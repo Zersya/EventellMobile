@@ -1,13 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../utility.dart';
+import 'package:eventell/blocs/login/index.dart';
+import 'package:eventell/screens/utility.dart';
+import 'package:eventell/screens/main/main_page.dart';
 
-class RegistrationForm extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({
+    Key key,
+    @required LoginBloc loginBloc,
+  })  : _loginBloc = loginBloc,
+        super(key: key);
+
+  final LoginBloc _loginBloc;
+
   @override
-  _RegistrationFormState createState() => _RegistrationFormState();
+  LoginScreenState createState() {
+    return new LoginScreenState(_loginBloc);
+  }
 }
 
-class _RegistrationFormState extends State<RegistrationForm> {
+class LoginScreenState extends State<LoginScreen> {
+  final LoginBloc _loginBloc;
+  LoginScreenState(this._loginBloc);
+
+  @override
+  void initState() {
+    super.initState();
+    this._loginBloc.dispatch(LoadLoginEvent());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,35 +42,36 @@ class _RegistrationFormState extends State<RegistrationForm> {
       child: Column(
         children: <Widget>[
           Text(
-            'REGISTER',
+            'LOGIN',
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
-          FormRegister(),
+          FormLogin(
+            loginBloc: widget._loginBloc,
+          ),
         ],
       ),
     );
   }
 }
 
-class FormRegister extends StatefulWidget {
+class FormLogin extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final LoginBloc loginBloc;
 
-  FormRegister({Key key, this.scaffoldKey}) : super(key: key);
+  FormLogin({Key key, this.scaffoldKey, this.loginBloc}) : super(key: key);
 
   @override
-  _FormRegisterState createState() => _FormRegisterState();
+  _FormLoginState createState() => _FormLoginState();
 }
 
-class _FormRegisterState extends State<FormRegister> {
+class _FormLoginState extends State<FormLogin> {
   var _formKey = GlobalKey<FormState>();
 
   var _emailController = TextEditingController();
 
   var _passwordController = TextEditingController();
-  var _passwordConfController = TextEditingController();
 
   FocusNode _passwordFocus = FocusNode();
-  FocusNode _passwordConfFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +104,7 @@ class _FormRegisterState extends State<FormRegister> {
               validator: ((val) {
                 if (val.isEmpty) return 'Fill the email field';
               }),
-              onFieldSubmitted: (value){
+              onFieldSubmitted: (value) {
                 FocusScope.of(context).requestFocus(_passwordFocus);
               },
             ),
@@ -89,7 +117,6 @@ class _FormRegisterState extends State<FormRegister> {
             borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
             shadowColor: Colors.black54,
             child: TextFormField(
-              textInputAction: TextInputAction.next,
               focusNode: _passwordFocus,
               controller: _passwordController,
               obscureText: true,
@@ -105,35 +132,6 @@ class _FormRegisterState extends State<FormRegister> {
               validator: (val) {
                 if (val.isEmpty) return 'Fill the password field';
               },
-              onFieldSubmitted: (value){
-                FocusScope.of(context).requestFocus(_passwordConfFocus);
-              },
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
-            shadowColor: Colors.black54,
-            child: TextFormField(
-              focusNode: _passwordConfFocus,
-              controller: _passwordConfController,
-              obscureText: true,
-              decoration: InputDecoration(
-                fillColor: Color.fromRGBO(233, 233, 233, 1),
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(Sizing.borderRadiusFormText))),
-                contentPadding: EdgeInsets.all(15.0),
-                labelText: 'Confirm Password',
-              ),
-              validator: (val) {
-                if (val.isEmpty)
-                  return 'Fill the confirmation password field';
-              },
             ),
           ),
           SizedBox(
@@ -146,31 +144,62 @@ class _FormRegisterState extends State<FormRegister> {
   }
 
   Widget btnSubmit() {
-    return Material(
-      elevation: 10,
-      shadowColor: Colors.black87,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 50,
-        child: FlatButton.icon(
-            color: Coloring.colorRegister,
-            icon: Icon(
-              MdiIcons.login,
-              color: Coloring.colorLoginText,
-            ),
-            onPressed: _onLogin,
-            label: Text(
-              'REGISTER',
-              style: TextStyle(color: Coloring.colorLoginText),
-            )),
-      ),
+    return BlocListener(
+      bloc: widget.loginBloc,
+      listener: (BuildContext context, LoginState currentState) {
+        if (currentState is SuccessLoginState) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MainPage()),
+              (Route<dynamic> route) => false);
+        }
+        if (currentState is ErrorLoginState) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(currentState.errorMessage),
+          ));
+        }
+      },
+      child: BlocBuilder<LoginEvent, LoginState>(
+          bloc: widget.loginBloc,
+          builder: (
+            BuildContext context,
+            LoginState currentState,
+          ) {
+            if (currentState is UnLoginState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (currentState is LoadingLoginState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Material(
+              elevation: 10,
+              shadowColor: Colors.black87,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: FlatButton.icon(
+                    color: Coloring.colorLogin,
+                    icon: Icon(
+                      MdiIcons.login,
+                      color: Coloring.colorLoginText,
+                    ),
+                    onPressed: _onLogin,
+                    label: Text(
+                      'LOGIN',
+                      style: TextStyle(color: Coloring.colorLoginText),
+                    )),
+              ),
+            );
+          }),
     );
   }
 
   void _onLogin() {
     if (_formKey.currentState.validate()) {
-      // _emailController.text = 'zeinersyad';
-      // _passwordController.text = '123456';
+      widget.loginBloc.dispatch(SubmitLoginEvent(_emailController.text, _passwordController.text));
     }
   }
 }

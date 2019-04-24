@@ -181,6 +181,9 @@ class _FormRegisterState extends State<FormRegister> {
       bloc: widget.registerBloc,
       listener: (BuildContext context, RegisterState currentState) {
         if(currentState is SuccessRegisterState){
+          _emailController.text = '';
+          _passwordController.text = '';
+          _passwordConfController.text = '';
           Scaffold.of(context).showSnackBar(SnackBar(
             content: new Text(currentState.successMessage ?? 'Success'),
           ));
