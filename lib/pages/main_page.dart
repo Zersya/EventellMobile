@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'home.screen.dart';
-import '../utility.dart';
+import 'package:eventell/blocs/home/index.dart';
+import 'package:eventell/blocs/profile/index.dart';
+import 'package:eventell/Utils/utility.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -12,36 +13,31 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
+  HomeBloc _homeBloc;
+  ProfileBloc _profileBloc;
 
-  List<Widget> listPage = [HomePage()];
+  List<Widget> listPage;
+
+  @override
+  void initState() { 
+    super.initState();
+    _homeBloc = HomeBloc();
+    _profileBloc = ProfileBloc();
+    listPage  = [HomeScreen(homeBloc: _homeBloc,), null, null, null, ProfileScreen(profileBloc: _profileBloc,)];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(Sizing.heightAppBar),
-            child: Padding(
-              padding: const EdgeInsets.all(Sizing.paddingContent),
-              child: Container(
-                color: Coloring.colorAppbar,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: Sizing.paddingTopAppbar,
-                    ),
-                    Text('Hi !',
-                        style: TextStyle(fontSize: Sizing.fontSizeAppBar)),
-                    Text('Zein Ersyad',
-                        style: TextStyle(
-                            fontSize: Sizing.fontSizeAppBar,
-                            fontWeight: FontWeight.bold))
-                  ],
-                ),
-              ),
+            child: Container(
+              color: Coloring.colorAppbar,
             )),
         body: listPage[currentIndex],
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 6,
+          selectedFontSize: Sizing.selectedFontSize,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),

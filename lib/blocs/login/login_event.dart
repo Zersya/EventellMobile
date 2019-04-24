@@ -6,8 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 @immutable
 abstract class LoginEvent {
-  Future<LoginState> applyAsync(
-      {LoginState currentState, LoginBloc bloc});
+  Future<LoginState> applyAsync({LoginState currentState, LoginBloc bloc});
 }
 
 class LoadLoginEvent extends LoginEvent {
@@ -18,7 +17,10 @@ class LoadLoginEvent extends LoginEvent {
   Future<LoginState> applyAsync(
       {LoginState currentState, LoginBloc bloc}) async {
     try {
-      await Future.delayed(new Duration(seconds: 2));
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      var currentUser = _auth.currentUser();
+      if (currentUser != null) return new SuccessLoginState();
+
       return new InLoginState();
     } catch (_) {
       print('LoadLoginEvent ' + _?.toString());
@@ -46,11 +48,10 @@ class SubmitLoginEvent extends LoginEvent {
     }
   }
 
-  _login() async{
+  _login() async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     FirebaseUser _user = await _auth.signInWithEmailAndPassword(
-      email: _email, password: _password
-    );
+        email: _email, password: _password);
 
     return _user;
   }

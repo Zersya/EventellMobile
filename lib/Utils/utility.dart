@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 class Sizing{
 
   //=================APPBAR===========================
-  static const double heightAppBar = 100;
+  static const double heightAppBar = 20;
   static const double paddingTopAppbar = 30;
   static const double fontSizeAppBar = 21;
+  //=================Profile===========================
+  static const double fontTitleSize = 45;
+  static const double fontProfileEventWordSize = 18;
+  static const double fontProfileEventSubWordSize = 15;
   //=================HOME===========================
   static const double paddingInfoTitle = 7;
   static const double circularInfoTitle = 15;
   static const double paddingPageView = 10;
   static const double paddingIndicatorPageView = 15;
   static const double borderRadiusCard = 15;
+  static const double selectedFontSize = 15;
   //=================AUTH===========================
   static const double borderRadiusHeadBtn = 50;
   static const double borderRadiusFormText = 5;
@@ -31,5 +36,10 @@ class Coloring{
 }
 
 class StringWord{
+  static const String profileAddEvent = 'You can create your own event';
+  static const String profileSubAddEvent = 'Create event and tell the audience to join your event';
+  static const String title = 'Eventell';
   static const String infoTitle = 'this is an event recommendation for you';
+  static const String welcomeTitle = 'Hi !';
+
 }

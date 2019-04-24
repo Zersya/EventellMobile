@@ -1,22 +1,22 @@
+import 'package:eventell/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:eventell/blocs/register/index.dart';
 import 'package:eventell/blocs/login/index.dart';
-import 'package:eventell/screens/utility.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eventell/Utils/utility.dart';
 
-class MainAuth extends StatefulWidget {
+class AuthPage extends StatefulWidget {
   @override
-  _MainAuthState createState() => _MainAuthState();
+  _AuthPageState createState() => _AuthPageState();
 }
 
-class _MainAuthState extends State<MainAuth>
+class _AuthPageState extends State<AuthPage>
     with SingleTickerProviderStateMixin {
   var currentForm = 0;
   AnimationController _animationController;
 
   RegisterBloc _registerBloc;
   LoginBloc _loginBloc;
-
-  List<Widget> formWidget;
 
   List<Color> colorBackground = [
     Coloring.colorRegister,
@@ -57,55 +57,57 @@ class _MainAuthState extends State<MainAuth>
 
     _registerBloc = RegisterBloc();
     _loginBloc = LoginBloc();
-    formWidget = [
-      LoginScreen(
-        loginBloc: _loginBloc,
-      ),
-      RegisterScreen(
-        registerBloc: _registerBloc,
-      ),
-    ];
-
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return Scaffold(
-              backgroundColor: background
-                  .evaluate(AlwaysStoppedAnimation(_animationController.value)),
-              body: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 50,
-                      ),
-                      headerBuild(),
-                      SizedBox(
-                        child: Stack(children: <Widget>[
-                          Transform.translate(
-                              offset: translateFormLogin.value,
-                              child: LoginScreen(
-                                loginBloc: _loginBloc,
-                              )),
-                          Transform.translate(
-                              offset: translateFormRegister.value,
-                              child: RegisterScreen(
-                                registerBloc: _registerBloc,
-                              )),
-                        ]),
-                      )
-                    ],
+    return BlocListener(
+      bloc: _loginBloc,
+      listener: (BuildContext context, LoginState currentState){
+        if(currentState is SuccessLoginState){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MainPage()),
+              (Route<dynamic> route) => false);
+        }
+      },
+          child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return Scaffold(
+                backgroundColor: background
+                    .evaluate(AlwaysStoppedAnimation(_animationController.value)),
+                body: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 50,
+                        ),
+                        headerBuild(),
+                        SizedBox(
+                          child: Stack(children: <Widget>[
+                            Transform.translate(
+                                offset: translateFormLogin.value,
+                                child: LoginScreen(
+                                  loginBloc: _loginBloc,
+                                )),
+                            Transform.translate(
+                                offset: translateFormRegister.value,
+                                child: RegisterScreen(
+                                  registerBloc: _registerBloc,
+                                )),
+                          ]),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ));
-        });
+                ));
+          }),
+    );
   }
 
   Row headerBuild() {
