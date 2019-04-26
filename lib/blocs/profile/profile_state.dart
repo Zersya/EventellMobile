@@ -44,3 +44,27 @@ class ErrorProfileState extends ProfileState {
     return ErrorProfileState(this.errorMessage);
   }
 }
+
+class LogoutedProfileState extends ProfileState {
+  final logout;
+
+  LogoutedProfileState(this.logout);
+
+  @override
+  String toString() => 'LogoutedProfileState';
+
+  @override
+  ProfileState getStateCopy() {
+    return LogoutedProfileState(this.logout);
+  }
+}
+
+class LoadingProfileState extends ProfileState {
+   @override
+  String toString() => 'LoadingProfileState';
+
+  @override
+  ProfileState getStateCopy() {
+    return LoadingProfileState();
+  }
+}

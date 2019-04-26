@@ -147,6 +147,7 @@ class _FormLoginState extends State<FormLogin> {
     return BlocListener(
       bloc: widget.loginBloc,
       listener: (BuildContext context, LoginState currentState) {
+        print(currentState);
         if (currentState is SuccessLoginState) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => MainPage()),

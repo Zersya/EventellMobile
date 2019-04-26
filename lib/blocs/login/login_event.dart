@@ -18,7 +18,7 @@ class LoadLoginEvent extends LoginEvent {
       {LoginState currentState, LoginBloc bloc}) async {
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
-      var currentUser = _auth.currentUser();
+      var currentUser = await _auth.currentUser();
       if (currentUser != null) return new SuccessLoginState();
 
       return new InLoginState();

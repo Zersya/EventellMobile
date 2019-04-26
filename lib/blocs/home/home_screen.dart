@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/blocs/home/index.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/pages/auth_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -36,38 +37,51 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeEvent, HomeState>(
-        bloc: widget._homeBloc,
-        builder: (
-          BuildContext context,
-          HomeState currentState,
-        ) {
-          if (currentState is UnHomeState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+    return BlocListener(
+      bloc: _homeBloc,
+      listener: (BuildContext context, HomeState currentState) {
+        if (currentState is InHomeState) {
+          if (currentState.user == null) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => AuthPage()),
+                (Route<dynamic> route) => false);
           }
-          if (currentState is ErrorHomeState) {
-            return new Container(
-                child: new Center(
-              child: new Text(currentState.errorMessage ?? 'Error'),
-            ));
-          }
-          if (currentState is InHomeState) {
-            return Column(
-              children: <Widget>[
-                Expanded(
-                  child: buildHome(currentState.user),
-                ),
-              ],
-            );
-          }
-        });
+        }
+      },
+      child: BlocBuilder<HomeEvent, HomeState>(
+          bloc: widget._homeBloc,
+          builder: (
+            BuildContext context,
+            HomeState currentState,
+          ) {
+            if (currentState is UnHomeState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (currentState is ErrorHomeState) {
+              return new Container(
+                  child: new Center(
+                child: new Text(currentState.errorMessage ?? 'Error'),
+              ));
+            }
+            if (currentState is InHomeState) {
+              return Column(
+                children: <Widget>[
+                  Expanded(
+                    child: buildHome(currentState.user),
+                  ),
+                ],
+              );
+            }
+          }),
+    );
   }
 
   ListView buildHome(_user) {
-    var _userEmail = _user.email.toString().split('@')[0][0].toUpperCase() + _user.email.toString().split('@')[0].substring(1);
-    
+    var _userEmail = _user.email.toString().split('@')[0][0].toUpperCase() +
+        _user.email.toString().split('@')[0].substring(1);
+
     return ListView(
       shrinkWrap: true,
       physics: ScrollPhysics(),
@@ -90,7 +104,7 @@ class HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(
               left: Sizing.paddingContent, right: Sizing.paddingContent),
           child: Container(
-            alignment: Alignment.centerLeft,
+              alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                   color: Coloring.colorMain,
                   borderRadius: BorderRadius.circular(10)),

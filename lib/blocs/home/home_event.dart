@@ -17,10 +17,13 @@ class LoadHomeEvent extends HomeEvent {
   Future<HomeState> applyAsync(
       {HomeState currentState, HomeBloc bloc}) async {
     try {
-      FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-      FirebaseUser _user = await _firebaseAuth.currentUser();
-      print(_user);
-      return new InHomeState(_user);
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      FirebaseUser _user = await _auth.currentUser();
+      if(_user != null)
+        return new InHomeState(_user);
+      else{
+        
+      }
     } catch (_) {
       print('LoadHomeEvent ' + _?.toString());
       return new ErrorHomeState(_?.toString());
