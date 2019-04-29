@@ -25,6 +25,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   final ProfileBloc _profileBloc;
   ProfileScreenState(this._profileBloc);
 
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +35,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     super.dispose();
+    _profileBloc.dispose();
   }
 
   @override
@@ -42,11 +44,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       bloc: _profileBloc,
       listener: (BuildContext context, ProfileState currentState) {
         if (currentState is LogoutedProfileState) {
-          currentState.logout.then((_){
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => AuthPage()),
-              (Route<dynamic> route) => false);
-          });
+          Navigator.pushReplacementNamed(context, '/authPage');
         }
       },
       child: BlocBuilder<ProfileEvent, ProfileState>(

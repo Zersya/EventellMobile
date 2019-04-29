@@ -15,9 +15,6 @@ class _AuthPageState extends State<AuthPage>
   var currentForm = 0;
   AnimationController _animationController;
 
-  RegisterBloc _registerBloc;
-  LoginBloc _loginBloc;
-
   List<Color> colorBackground = [
     Coloring.colorRegister,
     Coloring.colorLogin,
@@ -55,59 +52,47 @@ class _AuthPageState extends State<AuthPage>
     });
     _animationController.forward();
 
-    _registerBloc = RegisterBloc();
-    _loginBloc = LoginBloc();
-    
     super.initState();
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      bloc: _loginBloc,
-      listener: (BuildContext context, LoginState currentState){
-        if(currentState is SuccessLoginState){
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => MainPage()),
-              (Route<dynamic> route) => false);
-        }
-      },
-          child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Scaffold(
-                backgroundColor: background
-                    .evaluate(AlwaysStoppedAnimation(_animationController.value)),
-                body: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 50,
-                        ),
-                        headerBuild(),
-                        SizedBox(
-                          child: Stack(children: <Widget>[
-                            Transform.translate(
-                                offset: translateFormLogin.value,
-                                child: LoginScreen(
-                                  loginBloc: _loginBloc,
-                                )),
-                            Transform.translate(
-                                offset: translateFormRegister.value,
-                                child: RegisterScreen(
-                                  registerBloc: _registerBloc,
-                                )),
-                          ]),
-                        )
-                      ],
-                    ),
+    return AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Scaffold(
+              backgroundColor: background
+                  .evaluate(AlwaysStoppedAnimation(_animationController.value)),
+              body: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 50,
+                      ),
+                      headerBuild(),
+                      SizedBox(
+                        child: Stack(children: <Widget>[
+                          Transform.translate(
+                              offset: translateFormLogin.value,
+                              child: LoginScreen()),
+                          Transform.translate(
+                              offset: translateFormRegister.value,
+                              child: RegisterScreen()),
+                        ]),
+                      )
+                    ],
                   ),
-                ));
-          }),
-    );
+                ),
+              ));
+        });
   }
 
   Row headerBuild() {

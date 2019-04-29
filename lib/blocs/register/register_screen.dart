@@ -7,31 +7,31 @@ import 'package:eventell/blocs/register/index.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
     Key key,
-    @required RegisterBloc registerBloc,
-  })  : _registerBloc = registerBloc,
-        super(key: key);
-
-  final RegisterBloc _registerBloc;
+  })  : super(key: key);
 
   @override
   RegisterScreenState createState() {
-    return new RegisterScreenState(_registerBloc);
+    return new RegisterScreenState();
   }
 }
 
 class RegisterScreenState extends State<RegisterScreen> {
-  final RegisterBloc _registerBloc;
-  RegisterScreenState(this._registerBloc);
+  RegisterScreenState();
+
+  RegisterBloc _registerBloc;
+
 
   @override
   void initState() {
     super.initState();
+    _registerBloc = RegisterBloc();
     this._registerBloc.dispatch(LoadRegisterEvent());
   }
 
   @override
   void dispose() {
     super.dispose();
+    _registerBloc.dispose();
   }
 
   @override
@@ -45,7 +45,7 @@ class RegisterScreenState extends State<RegisterScreen> {
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           FormRegister(
-            registerBloc: widget._registerBloc,
+            registerBloc: _registerBloc,
           ),
         ],
       ),

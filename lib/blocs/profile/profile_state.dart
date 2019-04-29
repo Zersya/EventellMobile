@@ -46,16 +46,13 @@ class ErrorProfileState extends ProfileState {
 }
 
 class LogoutedProfileState extends ProfileState {
-  final logout;
-
-  LogoutedProfileState(this.logout);
 
   @override
   String toString() => 'LogoutedProfileState';
 
   @override
   ProfileState getStateCopy() {
-    return LogoutedProfileState(this.logout);
+    return LogoutedProfileState();
   }
 }
 

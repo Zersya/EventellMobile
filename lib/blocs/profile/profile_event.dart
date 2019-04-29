@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eventell/blocs/login/index.dart';
 import 'package:eventell/blocs/profile/index.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,7 +18,7 @@ class LoadProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      await Future.delayed(new Duration(seconds: 2));
+      // await Future.delayed(new Duration(seconds: 2));
       return new InProfileState();
     } catch (_) {
       print('LoadProfileEvent ' + _?.toString());
@@ -34,8 +35,11 @@ class LogoutProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      return new LogoutedProfileState(FirebaseAuth.instance.signOut());
+      Future.wait([FirebaseAuth.instance.signOut()]);
+      
+      LoginBloc().dispatch(LoadLoginEvent());
 
+      return new LogoutedProfileState();
     } catch (_) {
       print('LoadProfileEvent ' + _?.toString());
       return new ErrorProfileState(_?.toString());

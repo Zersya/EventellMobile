@@ -8,25 +8,23 @@ import 'package:eventell/pages/main_page.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     Key key,
-    @required LoginBloc loginBloc,
-  })  : _loginBloc = loginBloc,
-        super(key: key);
-
-  final LoginBloc _loginBloc;
+  }) : super(key: key);
 
   @override
   LoginScreenState createState() {
-    return new LoginScreenState(_loginBloc);
+    return new LoginScreenState();
   }
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final LoginBloc _loginBloc;
-  LoginScreenState(this._loginBloc);
+  LoginScreenState();
+  LoginBloc _loginBloc;
 
   @override
   void initState() {
     super.initState();
+    _loginBloc = new LoginBloc();
+    print('init');
     this._loginBloc.dispatch(LoadLoginEvent());
   }
 
@@ -46,7 +44,7 @@ class LoginScreenState extends State<LoginScreen> {
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           FormLogin(
-            loginBloc: widget._loginBloc,
+            loginBloc: _loginBloc,
           ),
         ],
       ),
@@ -147,11 +145,8 @@ class _FormLoginState extends State<FormLogin> {
     return BlocListener(
       bloc: widget.loginBloc,
       listener: (BuildContext context, LoginState currentState) {
-        print(currentState);
         if (currentState is SuccessLoginState) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => MainPage()),
-              (Route<dynamic> route) => false);
+          Navigator.pushReplacementNamed(context, '/mainPage');
         }
         if (currentState is ErrorLoginState) {
           Scaffold.of(context).showSnackBar(SnackBar(
@@ -165,6 +160,9 @@ class _FormLoginState extends State<FormLogin> {
             BuildContext context,
             LoginState currentState,
           ) {
+            print('haha ' + currentState.toString());
+            print('haha ' + widget.loginBloc.currentState.toString());
+
             if (currentState is UnLoginState) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -200,7 +198,8 @@ class _FormLoginState extends State<FormLogin> {
 
   void _onLogin() {
     if (_formKey.currentState.validate()) {
-      widget.loginBloc.dispatch(SubmitLoginEvent(_emailController.text, _passwordController.text));
+      widget.loginBloc.dispatch(
+          SubmitLoginEvent(_emailController.text, _passwordController.text));
     }
   }
 }

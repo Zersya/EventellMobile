@@ -33,6 +33,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     super.dispose();
+    _homeBloc.dispose();
   }
 
   @override

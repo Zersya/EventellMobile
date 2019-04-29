@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eventell/blocs/home/index.dart';
 import 'package:eventell/blocs/login/index.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
@@ -18,9 +19,12 @@ class LoadLoginEvent extends LoginEvent {
       {LoginState currentState, LoginBloc bloc}) async {
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
-      var currentUser = await _auth.currentUser();
-      if (currentUser != null) return new SuccessLoginState();
-
+      FirebaseUser currentUser = await _auth.currentUser();
+      
+      if (currentUser != null) {
+        HomeBloc().dispatch(LoadHomeEvent());
+        return new SuccessLoginState();
+      }
       return new InLoginState();
     } catch (_) {
       print('LoadLoginEvent ' + _?.toString());
