@@ -18,7 +18,7 @@ class LoadProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      // await Future.delayed(new Duration(seconds: 2));
+      await Future.delayed(new Duration(seconds: 2));
       return new InProfileState();
     } catch (_) {
       print('LoadProfileEvent ' + _?.toString());

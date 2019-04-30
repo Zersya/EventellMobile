@@ -17,20 +17,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  LoginScreenState();
   LoginBloc _loginBloc;
 
   @override
   void initState() {
     super.initState();
-    _loginBloc = new LoginBloc();
-    print('init');
-    this._loginBloc.dispatch(LoadLoginEvent());
+    _loginBloc = LoginBloc();
+    _loginBloc.dispatch(LoadLoginEvent());
   }
 
   @override
   void dispose() {
     super.dispose();
+    _loginBloc.dispose();
   }
 
   @override
@@ -145,7 +144,7 @@ class _FormLoginState extends State<FormLogin> {
     return BlocListener(
       bloc: widget.loginBloc,
       listener: (BuildContext context, LoginState currentState) {
-        if (currentState is SuccessLoginState) {
+        if (currentState is LoggedInState) {
           Navigator.pushReplacementNamed(context, '/mainPage');
         }
         if (currentState is ErrorLoginState) {

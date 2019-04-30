@@ -55,12 +55,12 @@ class LoadingLoginState extends LoginState {
   }
 }
 
-class SuccessLoginState extends LoginState {
+class LoggedInState extends LoginState {
   @override
-  String toString() => 'SuccessLoginState';
+  String toString() => 'LoggedInState';
 
   @override
   LoginState getStateCopy() {
-    return SuccessLoginState();
+    return LoggedInState();
   }
 }

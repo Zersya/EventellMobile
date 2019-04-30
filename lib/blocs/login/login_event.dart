@@ -22,8 +22,7 @@ class LoadLoginEvent extends LoginEvent {
       FirebaseUser currentUser = await _auth.currentUser();
       
       if (currentUser != null) {
-        HomeBloc().dispatch(LoadHomeEvent());
-        return new SuccessLoginState();
+        return new LoggedInState();
       }
       return new InLoginState();
     } catch (_) {
@@ -35,7 +34,6 @@ class LoadLoginEvent extends LoginEvent {
 
 class SubmitLoginEvent extends LoginEvent {
   final String _email, _password;
-
   SubmitLoginEvent(this._email, this._password);
 
   @override
@@ -46,7 +44,7 @@ class SubmitLoginEvent extends LoginEvent {
       {LoginState currentState, LoginBloc bloc}) async {
     try {
       FirebaseUser _user = await _login();
-      return new SuccessLoginState();
+      return new LoggedInState();
     } catch (err) {
       return new ErrorLoginState(err.message);
     }

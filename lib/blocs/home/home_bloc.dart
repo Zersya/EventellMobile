@@ -3,11 +3,11 @@ import 'package:bloc/bloc.dart';
 import 'package:eventell/blocs/home/index.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  static final HomeBloc _homeBlocSingleton = new HomeBloc._internal();
-  factory HomeBloc() {
-    return _homeBlocSingleton;
-  }
-  HomeBloc._internal();
+  // static final HomeBloc _homeBlocSingleton = new HomeBloc._internal();
+  // factory HomeBloc() {
+  //   return _homeBlocSingleton;
+  // }
+  // HomeBloc._internal();
   
   HomeState get initialState => new UnHomeState();
 

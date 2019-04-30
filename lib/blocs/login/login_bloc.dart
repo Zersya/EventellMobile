@@ -3,11 +3,11 @@ import 'package:bloc/bloc.dart';
 import 'package:eventell/blocs/login/index.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  static final LoginBloc _loginBlocSingleton = new LoginBloc._internal();
-  factory LoginBloc() {
-    return _loginBlocSingleton;
-  }
-  LoginBloc._internal();
+  // static final LoginBloc _loginBlocSingleton = new LoginBloc._internal();
+  // factory LoginBloc() {
+  //   return _loginBlocSingleton;
+  // }
+  // LoginBloc._internal();
   
   LoginState get initialState => new UnLoginState();
 

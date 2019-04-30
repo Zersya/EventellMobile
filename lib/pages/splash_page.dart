@@ -31,17 +31,11 @@ class _SplashPageState extends State<SplashPage> {
     return BlocListener(
       bloc: _loginBloc,
       listener: (BuildContext context, LoginState currentState) {
-        if (currentState is SuccessLoginState) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => MainPage()),
-              (Route<dynamic> route) => false);
+        if (currentState is LoggedInState) {
+          Navigator.of(context).pushReplacementNamed('/mainPage');
         }
         if (currentState is InLoginState) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => BlocProvider(
-                bloc: _loginBloc, child: AuthPage(),
-              )),
-              (Route<dynamic> route) => false);
+          Navigator.of(context).pushReplacementNamed('/onboardingPage');
         }
       },
       child: Scaffold(
@@ -50,7 +44,7 @@ class _SplashPageState extends State<SplashPage> {
           child: Center(
             child: Text(
               StringWord.title.toUpperCase(),
-              style: TextStyle(color: Colors.white, fontSize: 34),
+              style: TextStyle(color: Colors.black87, fontSize: 36, fontWeight: FontWeight.bold, fontFamily: 'sf-compact'),
             ),
           ),
         ),
