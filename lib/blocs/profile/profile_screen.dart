@@ -43,6 +43,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     return BlocListener(
       bloc: _profileBloc,
       listener: (BuildContext context, ProfileState currentState) {
+        print(currentState);
         if (currentState is LogoutedProfileState) {
           Navigator.pushReplacementNamed(context, '/authPage');
         }

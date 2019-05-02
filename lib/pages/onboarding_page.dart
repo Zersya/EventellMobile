@@ -59,7 +59,8 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
             height: 450,
@@ -68,46 +69,6 @@ class OnBoardingScreen extends StatelessWidget {
               children: <Widget>[
                 Positioned(
                     top: 0, child: Image.asset('assets/graphics/ellipse.png')),
-                Positioned(
-                  top: 30,
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        page != 1
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.arrow_back_ios,
-                                  size: 28,
-                                ),
-                                onPressed: () {
-                                  pageController.previousPage(
-                                    curve: Curves.easeInOut,
-                                    duration: Duration(
-                                        milliseconds:
-                                            Sizing.onBoardDurationTime),
-                                  );
-                                },
-                              )
-                            : SizedBox(),
-                        GestureDetector(
-                          child: SizedBox(
-                            height: 30,
-                            child: Text(
-                              'Skip',
-                              style: TextStyle(fontSize: 21),
-                            ),
-                          ),
-                          onTap: () {
-                            pageController.jumpToPage(3);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Positioned(
                     top: 100,
                     left: 30,
@@ -131,6 +92,49 @@ class OnBoardingScreen extends StatelessWidget {
                     right: 10,
                     height: 420,
                     child: Image.asset('assets/graphics/human1.png')),
+                Positioned(
+                  top: 30,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        page != 1
+                            ? SizedBox(
+                                height: 50,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_back_ios,
+                                    size: 28,
+                                  ),
+                                  onPressed: () {
+                                    pageController.previousPage(
+                                      curve: Curves.easeInOut,
+                                      duration: Duration(
+                                          milliseconds:
+                                              Sizing.onBoardDurationTime),
+                                    );
+                                  },
+                                ))
+                            : SizedBox(height: 50),
+                        GestureDetector(
+                          child: SizedBox(
+                            height: 30,
+                            child: Text(
+                              'Skip',
+                              style: TextStyle(fontSize: 21),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, '/authPage');
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -149,29 +153,29 @@ class OnBoardingScreen extends StatelessWidget {
                   style: TextStyle(
                       color: Coloring.textOnBoard,
                       fontSize: Sizing.onBoardSubTitleSize))),
-          SizedBox(
-            height: 30,
-          ),
-          SizedBox(
-            width: 120,
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              color: Coloring.colorMain,
-              child: Text(
-                page != 3 ? 'NEXT' : 'GET STARTED',
-                style: TextStyle(fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: SizedBox(
+              width: 120,
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                color: Coloring.colorMain,
+                child: Text(
+                  page != 3 ? 'NEXT' : 'GET STARTED',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  if (page != 3) {
+                    pageController.nextPage(
+                        curve: Curves.easeInOut,
+                        duration:
+                            Duration(milliseconds: Sizing.onBoardDurationTime));
+                  } else {
+                    Navigator.pushReplacementNamed(context, '/authPage');
+                  }
+                },
               ),
-              onPressed: () {
-                if (page != 3) {
-                  pageController.nextPage(
-                      curve: Curves.easeInOut,
-                      duration:
-                          Duration(milliseconds: Sizing.onBoardDurationTime));
-                } else {
-                  Navigator.pushReplacementNamed(context, '/authPage');
-                }
-              },
             ),
           )
         ],

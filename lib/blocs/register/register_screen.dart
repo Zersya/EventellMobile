@@ -7,7 +7,7 @@ import 'package:eventell/blocs/register/index.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
     Key key,
-  })  : super(key: key);
+  }) : super(key: key);
 
   @override
   RegisterScreenState createState() {
@@ -19,7 +19,6 @@ class RegisterScreenState extends State<RegisterScreen> {
   RegisterScreenState();
 
   RegisterBloc _registerBloc;
-
 
   @override
   void initState() {
@@ -41,9 +40,10 @@ class RegisterScreenState extends State<RegisterScreen> {
       child: Column(
         children: <Widget>[
           Text(
-            'REGISTER',
+            "CREATE YOUR ACCOUNT",
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
+          SizedBox(height: 25),
           FormRegister(
             registerBloc: _registerBloc,
           ),
@@ -86,86 +86,65 @@ class _FormRegisterState extends State<FormRegister> {
           SizedBox(
             height: 20,
           ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
-            shadowColor: Colors.black54,
-            child: TextFormField(
-              textInputAction: TextInputAction.next,
-              controller: _emailController,
-              decoration: InputDecoration(
-                fillColor: Color.fromRGBO(233, 233, 233, 1),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(Sizing.borderRadiusFormText),
-                ),
-                contentPadding: EdgeInsets.all(15.0),
-                labelText: 'Email',
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            controller: _emailController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(Sizing.borderRadiusFormText),
               ),
-              validator: ((val) {
-                if (val.isEmpty) return 'Fill the email field';
-              }),
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(_passwordFocus);
-              },
+              contentPadding: EdgeInsets.all(15.0),
+              labelText: 'Email',
             ),
+            validator: ((val) {
+              if (val.isEmpty) return 'Fill the email field';
+            }),
+            onFieldSubmitted: (value) {
+              FocusScope.of(context).requestFocus(_passwordFocus);
+            },
           ),
           SizedBox(
             height: 20,
           ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
-            shadowColor: Colors.black54,
-            child: TextFormField(
-              textInputAction: TextInputAction.next,
-              focusNode: _passwordFocus,
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                fillColor: Color.fromRGBO(233, 233, 233, 1),
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(Sizing.borderRadiusFormText))),
-                contentPadding: EdgeInsets.all(15.0),
-                labelText: 'Password',
-              ),
-              validator: (val) {
-                if (val.isEmpty) return 'Fill the password field';
-              },
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(_passwordConfFocus);
-              },
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            focusNode: _passwordFocus,
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(Sizing.borderRadiusFormText))),
+              contentPadding: EdgeInsets.all(15.0),
+              labelText: 'Password',
             ),
+            validator: (val) {
+              if (val.isEmpty) return 'Fill the password field';
+            },
+            onFieldSubmitted: (value) {
+              FocusScope.of(context).requestFocus(_passwordConfFocus);
+            },
           ),
           SizedBox(
             height: 20,
           ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
-            shadowColor: Colors.black54,
-            child: TextFormField(
-              focusNode: _passwordConfFocus,
-              controller: _passwordConfController,
-              obscureText: true,
-              decoration: InputDecoration(
-                fillColor: Color.fromRGBO(233, 233, 233, 1),
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(Sizing.borderRadiusFormText))),
-                contentPadding: EdgeInsets.all(15.0),
-                labelText: 'Confirm Password',
-              ),
-              validator: (val) {
-                if (val.isEmpty) return 'Fill the confirmation password field';
-                if (val != _passwordController.text)
-                  return 'Password is not same';
-              },
+          TextFormField(
+            focusNode: _passwordConfFocus,
+            controller: _passwordConfController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(Sizing.borderRadiusFormText))),
+              contentPadding: EdgeInsets.all(15.0),
+              labelText: 'Confirm Password',
             ),
+            validator: (val) {
+              if (val.isEmpty) return 'Fill the confirmation password field';
+              if (val != _passwordController.text)
+                return 'Password is not same';
+            },
           ),
           SizedBox(
             height: 25,
@@ -180,7 +159,7 @@ class _FormRegisterState extends State<FormRegister> {
     return BlocListener(
       bloc: widget.registerBloc,
       listener: (BuildContext context, RegisterState currentState) {
-        if(currentState is SuccessRegisterState){
+        if (currentState is SuccessRegisterState) {
           _emailController.text = '';
           _passwordController.text = '';
           _passwordConfController.text = '';
@@ -211,24 +190,19 @@ class _FormRegisterState extends State<FormRegister> {
                 child: CircularProgressIndicator(),
               );
             }
-            return Material(
-              elevation: 10,
-              shadowColor: Colors.black87,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                child: FlatButton.icon(
-                    color: Coloring.colorRegister,
-                    icon: Icon(
-                      MdiIcons.login,
-                      color: Coloring.colorLoginText,
-                    ),
-                    onPressed: _onLogin,
-                    label: Text(
-                      'REGISTER',
-                      style: TextStyle(color: Coloring.colorLoginText),
-                    )),
-              ),
+            return SizedBox(
+              width: 150,
+              height: 40,
+              child: FlatButton(
+                  color: Coloring.colorMain,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: _onLogin,
+                  child: Text(
+                    'REGISTER',
+                    style:
+                        TextStyle(color: Coloring.colorLoginText, fontSize: 18),
+                  )),
             );
           }),
     );

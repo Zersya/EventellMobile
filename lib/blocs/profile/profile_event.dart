@@ -36,7 +36,6 @@ class LogoutProfileEvent extends ProfileEvent {
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
       Future.wait([FirebaseAuth.instance.signOut()]);
-      
       LoginBloc().dispatch(LoadLoginEvent());
 
       return new LogoutedProfileState();

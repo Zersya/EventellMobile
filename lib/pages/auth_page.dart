@@ -2,6 +2,7 @@ import 'package:eventell/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:eventell/blocs/register/index.dart';
 import 'package:eventell/blocs/login/index.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/Utils/utility.dart';
 
@@ -77,15 +78,36 @@ class _AuthPageState extends State<AuthPage>
                       SizedBox(
                         height: 50,
                       ),
-                      headerBuild(),
                       SizedBox(
+                        height: MediaQuery.of(context).size.height,
                         child: Stack(children: <Widget>[
                           Transform.translate(
                               offset: translateFormLogin.value,
-                              child: LoginScreen()),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  LoginScreen(),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: buildRichText(
+                                        0,
+                                        StringWord.registerMessage1,
+                                        StringWord.registerMessage2),
+                                  )
+                                ],
+                              )),
                           Transform.translate(
                               offset: translateFormRegister.value,
-                              child: RegisterScreen()),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  RegisterScreen(),
+                                  buildRichText(1, StringWord.loginMessage1,
+                                      StringWord.loginMessage2)
+                                ],
+                              )),
                         ]),
                       )
                     ],
@@ -93,6 +115,33 @@ class _AuthPageState extends State<AuthPage>
                 ),
               ));
         });
+  }
+
+  Widget buildRichText(int _mode, String _word1, String _word2) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _mode == 0
+              ? _animationController.reverse()
+              : _animationController.forward();
+        });
+      },
+      child: SizedBox(
+        height: 20,
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              text: _word1,
+              children: <TextSpan>[
+                TextSpan(
+                    style: TextStyle(
+                        color: Coloring.colorMain, fontWeight: FontWeight.bold),
+                    text: _word2),
+              ]),
+        ),
+      ),
+    );
   }
 
   Row headerBuild() {

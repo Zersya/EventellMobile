@@ -16,6 +16,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileEvent event,
   ) async* {
     try {
+      print(event.toString());
       yield await event.applyAsync(currentState: currentState, bloc: this);
     } catch (_) {
       print('ProfileBloc ' + _?.toString());

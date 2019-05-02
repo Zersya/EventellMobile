@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Eventell',
       theme: ThemeData(
-        primaryColor: Coloring.colorMain,
         fontFamily: 'sf-compact'
       ),
       home: SplashPage(),

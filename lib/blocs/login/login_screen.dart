@@ -34,13 +34,17 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(Sizing.paddingContent),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Text(
-            'LOGIN',
+            "LET'S GET STARTED",
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 35,
           ),
           FormLogin(
             loginBloc: _loginBloc,
@@ -77,64 +81,54 @@ class _FormLoginState extends State<FormLogin> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           SizedBox(
             height: 20,
           ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
-            shadowColor: Colors.black54,
-            child: TextFormField(
-              textInputAction: TextInputAction.next,
-              controller: _emailController,
-              decoration: InputDecoration(
-                fillColor: Color.fromRGBO(233, 233, 233, 1),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(Sizing.borderRadiusFormText),
-                ),
-                contentPadding: EdgeInsets.all(15.0),
-                labelText: 'Email',
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            controller: _emailController,
+            decoration: InputDecoration(
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(Sizing.borderRadiusFormText),
               ),
-              validator: ((val) {
-                if (val.isEmpty) return 'Fill the email field';
-              }),
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(_passwordFocus);
-              },
+              contentPadding: EdgeInsets.all(15.0),
+              labelText: 'Email',
             ),
+            validator: ((val) {
+              if (val.isEmpty) return 'Fill the email field';
+            }),
+            onFieldSubmitted: (value) {
+              FocusScope.of(context).requestFocus(_passwordFocus);
+            },
           ),
           SizedBox(
             height: 20,
           ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(Sizing.borderRadiusFormText),
-            shadowColor: Colors.black54,
-            child: TextFormField(
-              focusNode: _passwordFocus,
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                fillColor: Color.fromRGBO(233, 233, 233, 1),
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(Sizing.borderRadiusFormText))),
-                contentPadding: EdgeInsets.all(15.0),
-                labelText: 'Password',
-              ),
-              validator: (val) {
-                if (val.isEmpty) return 'Fill the password field';
-              },
+          TextFormField(
+            focusNode: _passwordFocus,
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(Sizing.borderRadiusFormText))),
+              contentPadding: EdgeInsets.all(15.0),
+              labelText: 'Password',
             ),
+            validator: (val) {
+              if (val.isEmpty) return 'Fill the password field';
+            },
           ),
           SizedBox(
             height: 25,
           ),
-          btnSubmit()
+          btnSubmit(),
+         
+          
         ],
       ),
     ));
@@ -159,9 +153,6 @@ class _FormLoginState extends State<FormLogin> {
             BuildContext context,
             LoginState currentState,
           ) {
-            print('haha ' + currentState.toString());
-            print('haha ' + widget.loginBloc.currentState.toString());
-
             if (currentState is UnLoginState) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -172,24 +163,19 @@ class _FormLoginState extends State<FormLogin> {
                 child: CircularProgressIndicator(),
               );
             }
-            return Material(
-              elevation: 10,
-              shadowColor: Colors.black87,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                child: FlatButton.icon(
-                    color: Coloring.colorLogin,
-                    icon: Icon(
-                      MdiIcons.login,
-                      color: Coloring.colorLoginText,
-                    ),
-                    onPressed: _onLogin,
-                    label: Text(
-                      'LOGIN',
-                      style: TextStyle(color: Coloring.colorLoginText),
-                    )),
-              ),
+            return SizedBox(
+              width: 150,
+              height: 40,
+              child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  color: Coloring.colorMain,
+                  onPressed: _onLogin,
+                  child: Text(
+                    'LOGIN',
+                    style:
+                        TextStyle(color: Coloring.colorLoginText, fontSize: 18),
+                  )),
             );
           }),
     );

@@ -34,9 +34,9 @@ class Coloring{
   static const Color colorMain = Color.fromRGBO(254, 192, 3, 1);
   static const Color textOnBoard = Colors.black87;
   //=================AUTH===========================
-  static const Color colorLogin = Color.fromRGBO(251, 192, 45, 1);
+  static const Color colorLogin = Colors.white;
   static const Color colorLoginText = Colors.black87;
-  static const Color colorRegister = Color.fromRGBO(255, 242, 99, 1);
+  static const Color colorRegister = Colors.white;
 }
 
 class StringWord{
@@ -52,5 +52,9 @@ class StringWord{
   static const String subtitleOnboard1 = 'Your solution to find and sell your event';
   static const String subtitleOnboard2 = 'You can search for your favorite events and you can directly buy tickets here';
   static const String subtitleOnboard3 = 'You can add your event for sale in our application';
-
+  
+  static const String registerMessage1 = "don't have an account ? ";
+  static const String registerMessage2 = "Register";
+  static const String loginMessage1 = "Already have an account ? ";
+  static const String loginMessage2 = "Log in";
 }
