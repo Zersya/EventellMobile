@@ -27,12 +27,21 @@ class Sizing{
   static const double onBoardTitleSize = 24;
   static const double onBoardSubTitleSize = 14;
   static const int onBoardDurationTime = 600;
+
+  static const double circleCategorySize = 60;
+  static const double circleCategorySizePadd = 10;
+
+  static const double verticalPaddingForm = 12;
+  static const double elevationField = 0;
+
+
 }
 
 class Coloring{
   static const Color colorAppbar = Colors.transparent;
   static const Color colorMain = Color.fromRGBO(254, 192, 3, 1);
   static const Color textOnBoard = Colors.black87;
+  static const Color bottomAppbar = Colors.white;
   //=================AUTH===========================
   static const Color colorLogin = Colors.white;
   static const Color colorLoginText = Colors.black87;
@@ -57,4 +66,7 @@ class StringWord{
   static const String registerMessage2 = "Register";
   static const String loginMessage1 = "Already have an account ? ";
   static const String loginMessage2 = "Log in";
+
+  static const String hintSearch = "search for events";
+
 }

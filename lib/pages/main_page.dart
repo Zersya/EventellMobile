@@ -1,3 +1,4 @@
+import 'package:eventell/blocs/eventform/index.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/blocs/home/index.dart';
@@ -19,24 +20,29 @@ class _MainPageState extends State<MainPage> {
   List<Widget> listPage;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     _homeBloc = HomeBloc();
     _profileBloc = ProfileBloc();
-    listPage  = [HomeScreen(homeBloc: _homeBloc,), null, null, null, ProfileScreen(profileBloc: _profileBloc,)];
+    listPage = [
+      HomeScreen(
+        homeBloc: _homeBloc,
+      ),
+      null,
+      null,
+      null,
+      ProfileScreen(
+        profileBloc: _profileBloc,
+      )
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(Sizing.heightAppBar),
-            child: Container(
-              color: Coloring.colorAppbar,
-            )),
         body: listPage[currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-          elevation: 6,
+          elevation: 25,
           selectedFontSize: Sizing.selectedFontSize,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -46,15 +52,15 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(fontSize: 10),
                 )),
             BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                title: Text(
-                  'FIND EVENT',
-                  style: TextStyle(fontSize: 10),
-                )),
-            BottomNavigationBarItem(
                 icon: Icon(MdiIcons.ticket),
                 title: Text(
                   'MY TICKET',
+                  style: TextStyle(fontSize: 10),
+                )),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.add_circle),
+                title: Text(
+                  'ADD EVEBT',
                   style: TextStyle(fontSize: 10),
                 )),
             BottomNavigationBarItem(
@@ -70,14 +76,18 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(fontSize: 10),
                 )),
           ],
-          selectedItemColor: Colors.black,
+          selectedItemColor: Coloring.colorMain,
           type: BottomNavigationBarType.fixed,
           currentIndex: currentIndex,
-          backgroundColor: Coloring.colorMain,
+          backgroundColor: Coloring.bottomAppbar,
           onTap: (index) {
-            setState(() {
-              currentIndex = index;
-            });
+            if (index != 2) {
+              setState(() {
+                currentIndex = index;
+              });
+            } else {
+              Navigator.of(context).pushNamed('/eventform');
+            }
           },
         ));
   }

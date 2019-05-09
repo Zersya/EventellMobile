@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/blocs/home/index.dart';
-import 'package:page_indicator/page_indicator.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/Utils/utility.dart';
 import 'package:eventell/pages/auth_page.dart';
 
@@ -67,13 +67,17 @@ class HomeScreenState extends State<HomeScreen> {
               ));
             }
             if (currentState is InHomeState) {
-              return Column(
-                children: <Widget>[
-                  Expanded(
-                    child: buildHome(currentState.user),
-                  ),
-                ],
-              );
+              return Stack(children: <Widget>[
+                Positioned(
+                    top: 0, child: Image.asset('assets/graphics/ellipse.png')),
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: buildHome(currentState.user),
+                    ),
+                  ],
+                ),
+              ]);
             }
           }),
     );
@@ -101,18 +105,43 @@ class HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-              left: Sizing.paddingContent, right: Sizing.paddingContent),
-          child: Container(
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: Coloring.colorMain,
-                  borderRadius: BorderRadius.circular(10)),
-              padding: EdgeInsets.all(Sizing.paddingInfoTitle),
-              child: Text(StringWord.infoTitle,
-                  style: TextStyle(
-                      color: Colors.black87, fontWeight: FontWeight.bold))),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          padding: EdgeInsets.all(Sizing.paddingContent),
+          child: TextFormField(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                hintText: StringWord.hintSearch,
+                contentPadding: EdgeInsets.all(15.0),
+                filled: true,
+                fillColor: Colors.white70,
+                suffixIcon: Icon(Icons.search)),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              new CircleButtonCategory(
+                  name: 'Category 1', icon: MdiIcons.music),
+              new CircleButtonCategory(
+                  name: 'Category 2', icon: MdiIcons.music),
+              new CircleButtonCategory(
+                  name: 'Category 3', icon: MdiIcons.music),
+              new CircleButtonCategory(
+                  name: 'Category 4', icon: MdiIcons.music),
+              new CircleButtonCategory(
+                  name: 'Category 5', icon: MdiIcons.music),
+            ],
+          ),
         ),
         SizedBox(
           height: 10,
@@ -137,7 +166,7 @@ class HomeScreenState extends State<HomeScreen> {
           return Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Sizing.borderRadiusCard)),
-            color: Coloring.colorMain,
+            color: Colors.white,
             elevation: 8,
             child: Padding(
               padding: const EdgeInsets.all(Sizing.paddingPageView),
@@ -189,6 +218,36 @@ class HomeScreenState extends State<HomeScreen> {
           else
             return SizedBox();
         },
+      ),
+    );
+  }
+}
+
+class CircleButtonCategory extends StatelessWidget {
+  final name;
+  final icon;
+  const CircleButtonCategory({Key key, this.name, this.icon}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(Sizing.circleCategorySizePadd),
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: Sizing.circleCategorySize,
+            height: Sizing.circleCategorySize,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: new Icon(
+              this.icon,
+              color: Colors.black,
+            ),
+          ),
+          Text(this.name)
+        ],
       ),
     );
   }
