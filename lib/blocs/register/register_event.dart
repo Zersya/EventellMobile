@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:eventell/blocs/register/index.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 @immutable
@@ -40,7 +39,8 @@ class SubmitRegisterEvent extends RegisterEvent {
       {RegisterState currentState, RegisterBloc bloc}) async {
     try {
       FirebaseUser _user = await _register();
-      return new SuccessRegisterState('Sukses membuat akun');
+      if(_user != null)
+        return new SuccessRegisterState('Sukses membuat akun');
     } catch (err) {
       return new ErrorRegisterState(err.message);
     }

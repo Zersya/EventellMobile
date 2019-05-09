@@ -5,8 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 @immutable
 abstract class HomeEvent {
-  Future<HomeState> applyAsync(
-      {HomeState currentState, HomeBloc bloc});
+  Future<HomeState> applyAsync({HomeState currentState, HomeBloc bloc});
 }
 
 class LoadHomeEvent extends HomeEvent {
@@ -14,16 +13,11 @@ class LoadHomeEvent extends HomeEvent {
   String toString() => 'LoadHomeEvent';
 
   @override
-  Future<HomeState> applyAsync(
-      {HomeState currentState, HomeBloc bloc}) async {
+  Future<HomeState> applyAsync({HomeState currentState, HomeBloc bloc}) async {
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
-      if(_user != null)
-        return new InHomeState(_user);
-      else{
-        
-      }
+      return new InHomeState(_user);
     } catch (_) {
       print('LoadHomeEvent ' + _?.toString());
       return new ErrorHomeState(_?.toString());

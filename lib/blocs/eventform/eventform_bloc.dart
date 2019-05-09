@@ -15,6 +15,8 @@ class EventformBloc extends Bloc<EventformEvent, EventformState> {
   Stream<EventformState> mapEventToState(
     EventformEvent event,
   ) async* {
+    if(event is SubmitEventformEvent)
+      yield LoadingAddEventState();
     try {
       yield await event.applyAsync(currentState: currentState, bloc: this);
     } catch (_) {

@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:eventell/blocs/home/index.dart';
 import 'package:eventell/blocs/login/index.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 @immutable
@@ -44,7 +42,11 @@ class SubmitLoginEvent extends LoginEvent {
       {LoginState currentState, LoginBloc bloc}) async {
     try {
       FirebaseUser _user = await _login();
-      return new LoggedInState();
+      if(_user != null)
+        return new LoggedInState();
+      else
+        return new ErrorLoginState("User is null");
+
     } catch (err) {
       return new ErrorLoginState(err.message);
     }

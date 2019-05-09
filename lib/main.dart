@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:eventell/pages/main_page.dart';
 import 'package:eventell/pages/auth_page.dart';
 import 'package:eventell/blocs/eventform/index.dart';
-import 'package:eventell/Utils/utility.dart';
 
 void main() => runApp(MyApp());
 

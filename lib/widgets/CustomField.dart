@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:eventell/Utils/utility.dart';
-import 'package:flutter/services.dart' as prefix0;
 
 class CustomField extends StatelessWidget {
   const CustomField({

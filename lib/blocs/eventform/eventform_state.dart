@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
 @immutable
 abstract class EventformState extends Equatable {
   EventformState([Iterable props]) : super(props);
-
   /// Copy object for use in action
   EventformState getStateCopy();
 }
@@ -22,12 +22,16 @@ class UnEventformState extends EventformState {
 
 /// Initialized
 class InEventformState extends EventformState {
+  final FirebaseUser user;
+
+  InEventformState(this.user);
+  
   @override
   String toString() => 'InEventformState';
 
   @override
   EventformState getStateCopy() {
-    return InEventformState();
+    return InEventformState(user);
   }
 }
 
@@ -42,5 +46,25 @@ class ErrorEventformState extends EventformState {
   @override
   EventformState getStateCopy() {
     return ErrorEventformState(this.errorMessage);
+  }
+}
+
+class AddedState extends EventformState {
+  @override
+  String toString() => 'AddedState';
+
+  @override
+  AddedState getStateCopy() {
+    return AddedState();
+  }
+}
+
+class LoadingAddEventState extends EventformState {
+  @override
+  String toString() => 'LoadingAddEventState';
+
+  @override
+  LoadingAddEventState getStateCopy() {
+    return LoadingAddEventState();
   }
 }

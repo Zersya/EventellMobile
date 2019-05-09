@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/blocs/profile/index.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/blocs/eventform/index.dart';
-import 'package:eventell/pages/auth_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({

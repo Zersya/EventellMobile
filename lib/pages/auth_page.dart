@@ -1,9 +1,7 @@
-import 'package:eventell/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:eventell/blocs/register/index.dart';
 import 'package:eventell/blocs/login/index.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/Utils/utility.dart';
 
 class AuthPage extends StatefulWidget {

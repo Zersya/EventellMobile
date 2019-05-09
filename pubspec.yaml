@@ -25,10 +25,11 @@ dependencies:
   cupertino_icons: ^0.1.2
   material_design_icons_flutter: ^3.2.3595
   page_indicator: ^0.2.0
-  cloud_firestore: ^0.9.13+1
-  firebase_auth: ^0.8.4+5
+  cloud_firestore: ^0.11.0+1
+  firebase_auth: ^0.11.0
+  firebase_storage: ^3.0.0
   flutter_bloc: ^0.11.1
-  firebase_core: ^0.3.4
+  firebase_core: ^0.4.0
   bloc: ^0.12.0
   equatable: ^0.2.3
   image_picker: ^0.5.4+3

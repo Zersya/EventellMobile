@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/blocs/login/index.dart';
 import 'package:eventell/Utils/utility.dart';
-import 'package:eventell/pages/main_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
