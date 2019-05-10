@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
@@ -23,15 +24,16 @@ class UnEventformState extends EventformState {
 /// Initialized
 class InEventformState extends EventformState {
   final FirebaseUser user;
+  final List<String> category;
 
-  InEventformState(this.user);
+  InEventformState(this.user, this.category);
   
   @override
   String toString() => 'InEventformState';
 
   @override
   EventformState getStateCopy() {
-    return InEventformState(user);
+    return InEventformState(user, category);
   }
 }
 

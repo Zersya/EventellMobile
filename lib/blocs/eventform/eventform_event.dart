@@ -22,11 +22,19 @@ class LoadEventformEvent extends EventformEvent {
   Future<EventformState> applyAsync(
       {EventformState currentState, EventformBloc bloc}) async {
     try {
-      await Future.delayed(new Duration(seconds: 2));
+
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
-
-      return new InEventformState(_user);
+      DocumentSnapshot _doc = await Firestore.instance
+          .collection('utility')
+          .document('category')
+          .get();
+      List<String> _category = new List<String>();
+      for(var item in _doc.data.values.first){
+        _category.add(item);
+      }
+      
+      return new InEventformState(_user, _category);
     } catch (_) {
       print('LoadEventformEvent ' + _?.toString());
       return new ErrorEventformState(_?.toString());
@@ -67,13 +75,12 @@ class SubmitEventformEvent extends EventformEvent {
   Future<EventformState> applyAsync(
       {EventformState currentState, EventformBloc bloc}) async {
     try {
-      final String filename =
-          this.eventName + Random().nextInt(100).toString() +extension(image.path);
+      final String filename = this.eventName +
+          Random().nextInt(100).toString() +
+          extension(image.path);
       final StorageReference storageRef =
           FirebaseStorage.instance.ref().child(filename);
-      final StorageUploadTask uploadTask = storageRef.putFile(
-        image
-      );
+      final StorageUploadTask uploadTask = storageRef.putFile(image);
       final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
       final String url = (await downloadUrl.ref.getDownloadURL());
       print('URL Is $url');

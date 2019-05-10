@@ -6,10 +6,11 @@ class Sizing{
   static const double heightAppBar = 20;
   static const double paddingTopAppbar = 30;
   static const double fontSizeAppBar = 21;
-  //=================Profile===========================
+  //=================Font===========================
   static const double fontTitleSize = 45;
   static const double fontProfileEventWordSize = 18;
   static const double fontProfileEventSubWordSize = 15;
+  static const double fontSuccessInfo = 30;
   //=================HOME===========================
   static const double paddingInfoTitle = 7;
   static const double circularInfoTitle = 15;
@@ -68,5 +69,6 @@ class StringWord{
   static const String loginMessage2 = "Log in";
 
   static const String hintSearch = "search for events";
+  static const String eventSuccess = "Your event was successfully added";
 
 }
