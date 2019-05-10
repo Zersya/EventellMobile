@@ -6,8 +6,10 @@ class Sizing{
   static const double heightAppBar = 20;
   static const double paddingTopAppbar = 30;
   static const double fontSizeAppBar = 21;
+  static const double fontSizeSubAppBar = 16;
+
   //=================Font===========================
-  static const double fontTitleSize = 45;
+  static const double fontTitleSize = 32;
   static const double fontProfileEventWordSize = 18;
   static const double fontProfileEventSubWordSize = 15;
   static const double fontSuccessInfo = 30;
@@ -24,6 +26,7 @@ class Sizing{
   static const int durationAnimationColor = 500;
  
   static const double paddingContent = 20;
+  static const double paddingEachContent = 40;
 
   static const double onBoardTitleSize = 24;
   static const double onBoardSubTitleSize = 14;
@@ -39,7 +42,7 @@ class Sizing{
 }
 
 class Coloring{
-  static const Color colorAppbar = Colors.transparent;
+  static const Color colorTransparent = Colors.transparent;
   static const Color colorMain = Color.fromRGBO(254, 192, 3, 1);
   static const Color textOnBoard = Colors.black87;
   static const Color bottomAppbar = Colors.white;
@@ -70,5 +73,8 @@ class StringWord{
 
   static const String hintSearch = "search for events";
   static const String eventSuccess = "Your event was successfully added";
+
+  static const String emptyData = "No data !!";
+
 
 }

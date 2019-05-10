@@ -48,43 +48,7 @@ class EventformScreenState extends State<EventformScreen> {
       listener: (BuildContext context, EventformState currentState) {
         if (currentState is AddedState) {
           this._eventformBloc.dispatch(LoadEventformEvent());
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .popUntil(ModalRoute.withName('/mainPage'));
-                },
-                child: Dialog(
-                    backgroundColor: Coloring.colorMain,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 3,
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.white,
-                            size: 45,
-                          ),
-                          Text(
-                            StringWord.eventSuccess,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizing.fontSuccessInfo,
-                            ),
-                          )
-                        ],
-                      ),
-                    )),
-              );
-            },
-          );
+          _successDialog(context);
         }
       },
       child: BlocBuilder<EventformEvent, EventformState>(
@@ -107,6 +71,46 @@ class EventformScreenState extends State<EventformScreen> {
             return ScreenForm(eventformBloc: widget._eventformBloc);
           }),
     );
+  }
+
+  Future _successDialog(BuildContext context) {
+    return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .popUntil(ModalRoute.withName('/mainPage'));
+              },
+              child: Dialog(
+                  backgroundColor: Coloring.colorMain,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 3,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                          size: 45,
+                        ),
+                        Text(
+                          StringWord.eventSuccess,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Sizing.fontSuccessInfo,
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            );
+          },
+        );
   }
 }
 
@@ -229,7 +233,7 @@ class _FormAddEventState extends State<FormAddEvent> {
   var _ticketController = TextEditingController();
   var _takController = TextEditingController();
 
-  String _selectedCategory = null;
+  String _selectedCategory;
 
   FocusNode _detailFocus = FocusNode();
   FocusNode _priceFocus = FocusNode();
@@ -237,13 +241,16 @@ class _FormAddEventState extends State<FormAddEvent> {
 
   String _time = 'Time';
   String _dateRange = 'Pick Date';
-
+@override
+  void initState() {
+    super.initState();
+    _selectedCategory = null;
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder(
         bloc: widget.eventformBloc,
         builder: (context, currentState) {
-          if(currentState is InEventformState){
           return Container(
               child: Form(
             key: _formKey,
@@ -266,14 +273,15 @@ class _FormAddEventState extends State<FormAddEvent> {
                   padding: const EdgeInsets.symmetric(
                       vertical: Sizing.verticalPaddingForm),
                   child: DropdownButton(
-                    items: currentState.category
+                    items: currentState is InEventformState ? 
+                    currentState.category
                         .map((String value) {
-                          print(value);
+                          
                       return DropdownMenuItem(
                         value: value,
                         child: Text(value),
                       );
-                    }).toList(),
+                    }).toList(): null,
                     underline: Container(color: Colors.black54, height: 1),
                     hint: Text('Select category'),
                     disabledHint: Text('Category not available'),
@@ -341,7 +349,6 @@ class _FormAddEventState extends State<FormAddEvent> {
               ],
             ),
           ));
-          }
         });
   }
 

@@ -30,13 +30,11 @@ class _CustomDateTimeState extends State<CustomDateTime> {
             onPressed: () {
               DatePicker.showTimePicker(context, showTitleActions: true,
                   onChanged: (date) {
-                print('change $date');
               }, onConfirm: (date) {
                 setState(() {
                   _time = date.hour.toString() + ":" + date.minute.toString();
                   widget.callbackTime(_time);
                 });
-                print('confirm ${_time}');
               }, currentTime: DateTime.now(), locale: LocaleType.en);
             },
             label: Text(

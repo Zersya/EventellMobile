@@ -38,9 +38,8 @@ class SubmitRegisterEvent extends RegisterEvent {
   Future<RegisterState> applyAsync(
       {RegisterState currentState, RegisterBloc bloc}) async {
     try {
-      FirebaseUser _user = await _register();
-      if(_user != null)
-        return new SuccessRegisterState('Sukses membuat akun');
+      await _register();
+      return new SuccessRegisterState('Sukses membuat akun');
     } catch (err) {
       return new ErrorRegisterState(err.message);
     }

@@ -29,6 +29,7 @@ class LoadEventformEvent extends EventformEvent {
           .collection('utility')
           .document('category')
           .get();
+          
       List<String> _category = new List<String>();
       for(var item in _doc.data.values.first){
         _category.add(item);
@@ -83,9 +84,10 @@ class SubmitEventformEvent extends EventformEvent {
       final StorageUploadTask uploadTask = storageRef.putFile(image);
       final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
       final String url = (await downloadUrl.ref.getDownloadURL());
-      print('URL Is $url');
 
-      await Firestore.instance.collection('events').document().setData({
+      String docId = Firestore.instance.collection('events').document().documentID;
+
+      await Firestore.instance.collection('events').document(docId).setData({
         'createdBy': this.createdBy,
         'eventName': this.eventName,
         'eventDetail': this.eventDetail,
@@ -98,6 +100,13 @@ class SubmitEventformEvent extends EventformEvent {
         'eventPrice': this.eventPrice,
         'eventImage': url
       });
+
+      await Firestore.instance.collection('users').document(this.createdBy).collection('events').document(docId).setData({
+        'isBuyed'  : false,
+        'isCreated': true,
+        'isLiked': false,
+      });
+
       return AddedState();
     } catch (err) {
       return ErrorEventformState(err.message);

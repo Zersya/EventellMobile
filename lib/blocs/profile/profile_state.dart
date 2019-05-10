@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -22,12 +23,17 @@ class UnProfileState extends ProfileState {
 
 /// Initialized
 class InProfileState extends ProfileState {
+  final FirebaseUser user;
+  final avataaar;
+
+  InProfileState(this.user, this.avataaar);
+
   @override
   String toString() => 'InProfileState';
 
   @override
   ProfileState getStateCopy() {
-    return InProfileState();
+    return InProfileState(this.user, this.avataaar);
   }
 }
 

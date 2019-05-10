@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:eventell/pages/main_page.dart';
 import 'package:eventell/pages/auth_page.dart';
 import 'package:eventell/blocs/eventform/index.dart';
+import 'package:eventell/blocs/myevent/index.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -21,7 +23,8 @@ class MyApp extends StatelessWidget {
         '/onboardingPage': (BuildContext context) => new OnBoardingPage(),
         '/authPage': (BuildContext context) => new AuthPage(),
         '/mainPage': (BuildContext context) => new MainPage(),
-        '/eventform': (BuildContext context) => new EventformPage()
+        '/eventform': (BuildContext context) => new EventformPage(),
+        '/myevent': (BuildContext context) => new MyeventPage(),
       },
     );
   }

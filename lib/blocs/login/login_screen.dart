@@ -137,7 +137,7 @@ class _FormLoginState extends State<FormLogin> {
       bloc: widget.loginBloc,
       listener: (BuildContext context, LoginState currentState) {
         if (currentState is LoggedInState) {
-          Navigator.pushReplacementNamed(context, '/mainPage');
+          Navigator.of(context).pushReplacementNamed('/mainPage');
         }
         if (currentState is ErrorLoginState) {
           Scaffold.of(context).showSnackBar(SnackBar(

@@ -13,7 +13,6 @@ class EventformPage extends StatelessWidget {
       appBar: new AppBar(
         backgroundColor: Coloring.colorMain,
         title: new Text("Create Event", style: TextStyle(color: Colors.black87),),
-        centerTitle: true,
         iconTheme: IconThemeData(
           color: Colors.black87
         ),
