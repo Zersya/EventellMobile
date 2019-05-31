@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _homeBloc = HomeBloc();
-    _profileBloc = ProfileBloc();
+//    _profileBloc = ProfileBloc();
     listPage = [
       HomeScreen(
         homeBloc: _homeBloc,
@@ -30,9 +30,7 @@ class _MainPageState extends State<MainPage> {
       null,
       null,
       null,
-      ProfileScreen(
-        profileBloc: _profileBloc,
-      )
+      ProfileScreen()
     ];
   }
 

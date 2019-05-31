@@ -67,16 +67,20 @@ class MyeventScreenState extends State<MyeventScreen> {
                             child: CircularProgressIndicator(),
                           );
                         default:
-                          if (!snapshot.hasData)
+                          List data = snapshot.data.documents.reversed.toList();
+                          if (data.isEmpty)
                             return Center(child: Text(StringWord.emptyData));
-                            
-                          return ListView(
-                            children: snapshot.data.documents
-                                .map((DocumentSnapshot _doc) {
+                          
+                          return ListView.separated(
+                            separatorBuilder: (context, index){
+                              return Divider(color: Colors.black87, height: 1.0,);
+                            },
+                            itemCount:data.length,
+                            itemBuilder: (context, index){
                               return CustomItemListEvent(
-                                doc: _doc,
+                                doc:data[index]
                               );
-                            }).toList(),
+                            },
                           );
                       }
                     }));

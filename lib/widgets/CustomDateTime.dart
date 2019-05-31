@@ -6,19 +6,27 @@ typedef void StringCallbackTime(String time);
 typedef void StringCallbackDateRange(String dateRange);
 
 class CustomDateTime extends StatefulWidget {
-  const CustomDateTime({Key key, this.callbackTime, this.callbackDateRange})
+  const CustomDateTime({Key key, this.callbackTime, this.callbackDateRange, this.time, this.date})
       : super(key: key);
 
   final StringCallbackTime callbackTime;
   final StringCallbackDateRange callbackDateRange;
+  final String time, date;
 
   @override
   _CustomDateTimeState createState() => _CustomDateTimeState();
 }
 
 class _CustomDateTimeState extends State<CustomDateTime> {
-  String _time = "Pick Time";
-  String _dateRange = "Pick Date";
+  String _time;
+  String _dateRange;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateRange = widget.date != null ? widget.date :  "Pick Date";
+    _time = widget.time != null ? widget.time : "Pick Time";
+  }
 
   @override
   Widget build(BuildContext context) {

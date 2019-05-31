@@ -8,7 +8,7 @@ class MyeventBloc extends Bloc<MyeventEvent, MyeventState> {
     return _myeventBlocSingleton;
   }
   MyeventBloc._internal();
-  
+
   MyeventState get initialState => new UnMyeventState();
 
   @override

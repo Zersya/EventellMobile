@@ -3,11 +3,11 @@ import 'package:bloc/bloc.dart';
 import 'package:eventell/blocs/eventform/index.dart';
 
 class EventformBloc extends Bloc<EventformEvent, EventformState> {
-  static final EventformBloc _eventformBlocSingleton = new EventformBloc._internal();
-  factory EventformBloc() {
-    return _eventformBlocSingleton;
-  }
-  EventformBloc._internal();
+//  static final EventformBloc _eventformBlocSingleton = new EventformBloc._internal();
+//  factory EventformBloc() {
+//    return _eventformBlocSingleton;
+//  }
+//  EventformBloc._internal();
   
   EventformState get initialState => new UnEventformState();
 

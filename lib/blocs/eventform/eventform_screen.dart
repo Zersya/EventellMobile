@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventell/blocs/eventform/eventform_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,45 +15,49 @@ import 'package:eventell/widgets/CustomSubmitButton.dart';
 class EventformScreen extends StatefulWidget {
   const EventformScreen({
     Key key,
-    @required EventformBloc eventformBloc,
-  })  : _eventformBloc = eventformBloc,
-        super(key: key);
-
-  final EventformBloc _eventformBloc;
+    this.dataEdit,
+  }) : super(key: key);
+  final dataEdit;
 
   @override
   EventformScreenState createState() {
-    return new EventformScreenState(_eventformBloc);
+    return new EventformScreenState();
   }
 }
 
 class EventformScreenState extends State<EventformScreen> {
-  final EventformBloc _eventformBloc;
-  EventformScreenState(this._eventformBloc);
+  EventformBloc _eventformBloc;
 
   @override
   void initState() {
     super.initState();
-    this._eventformBloc.dispatch(LoadEventformEvent());
+    _eventformBloc = new EventformBloc();
+
+    var dataEdit = widget.dataEdit;
+
+    _eventformBloc
+        .dispatch(LoadEventformEvent(dataEdit != null ? dataEdit : null));
   }
 
   @override
   void dispose() {
     super.dispose();
+    _eventformBloc.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-      bloc: this._eventformBloc,
+      bloc: _eventformBloc,
       listener: (BuildContext context, EventformState currentState) {
         if (currentState is AddedState) {
-          this._eventformBloc.dispatch(LoadEventformEvent());
+          _eventformBloc.dispatch(LoadEventformEvent(
+              widget.dataEdit != null ? widget.dataEdit : null));
           _successDialog(context);
         }
       },
       child: BlocBuilder<EventformEvent, EventformState>(
-          bloc: this._eventformBloc,
+          bloc: _eventformBloc,
           builder: (
             BuildContext context,
             EventformState currentState,
@@ -68,74 +73,79 @@ class EventformScreenState extends State<EventformScreen> {
                 child: new Text(currentState.errorMessage ?? 'Error'),
               ));
             }
-            return ScreenForm(eventformBloc: widget._eventformBloc);
+            return BlocProvider<EventformBloc>(
+              bloc: _eventformBloc,
+              child: ScreenForm(dataEdit:  widget.dataEdit),
+            );
           }),
     );
   }
 
   Future _successDialog(BuildContext context) {
     return showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context)
-                    .popUntil(ModalRoute.withName('/mainPage'));
-              },
-              child: Dialog(
-                  backgroundColor: Coloring.colorMain,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 3,
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                          size: 45,
-                        ),
-                        Text(
-                          StringWord.eventSuccess,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: Sizing.fontSuccessInfo,
-                          ),
-                        )
-                      ],
-                    ),
-                  )),
-            );
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).popUntil(ModalRoute.withName('/mainPage'));
           },
+          child: Dialog(
+              backgroundColor: Coloring.colorMain,
+              child: Container(
+                width: MediaQuery.of(context).size.width / 3,
+                height: MediaQuery.of(context).size.height / 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
+                      size: 45,
+                    ),
+                    Text(
+                      StringWord.eventSuccess,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Sizing.fontSuccessInfo,
+                      ),
+                    )
+                  ],
+                ),
+              )),
         );
+      },
+    );
   }
 }
 
 class ScreenForm extends StatefulWidget {
-  const ScreenForm({
-    Key key,
-    this.eventformBloc,
-  }) : super(key: key);
+  final dataEdit;
 
-  final EventformBloc eventformBloc;
+  const ScreenForm({Key key, this.dataEdit}) : super(key: key);
   @override
   _ScreenFormState createState() => _ScreenFormState();
 }
 
 class _ScreenFormState extends State<ScreenForm> {
   File _image;
+  var _eventformBloc;
+
+  bool _isEdit = false;
 
   @override
   void initState() {
     super.initState();
+    _eventformBloc = BlocProvider.of<EventformBloc>(context);
+
+    _isEdit = (_eventformBloc.currentState.dataEdit != null);
   }
 
   Future getImage(source) async {
     var image = await ImagePicker.pickImage(
-        source: source, maxHeight: 720, maxWidth: 1280);
+            source: source, maxHeight: 720, maxWidth: 1280);
 
     setState(() {
       _image = image;
@@ -157,25 +167,19 @@ class _ScreenFormState extends State<ScreenForm> {
                     borderRadius:
                         BorderRadius.circular(Sizing.borderRadiusCard),
                     border: Border.all(width: 1.5, color: Colors.grey)),
-                child: _image == null
-                    ? Align(
-                        child: Text(
-                          'Add your poster',
-                        ),
-                        alignment: Alignment.center,
-                      )
-                    : Image.file(
-                        _image,
-                        fit: BoxFit.contain,
-                        alignment: Alignment.center,
-                      ),
+                child: conditionImage(),
               ),
               onTap: () => _buildShowBottomSheet(context),
             ),
             SizedBox(
               height: 20,
             ),
-            FormAddEvent(eventformBloc: widget.eventformBloc, image: _image)
+            BlocBuilder(
+              bloc: _eventformBloc,
+              builder: (context, currentState) {
+                return FormAddEvent(image: _image, isEdit: _isEdit, dataEdit: widget.dataEdit);
+              },
+            )
           ],
         ),
       ),
@@ -209,15 +213,32 @@ class _ScreenFormState extends State<ScreenForm> {
           );
         });
   }
+
+  Widget conditionImage() {
+    if(_image == null) {
+      return Align(
+        child: Text(
+          'Add your poster',
+        ),
+        alignment: Alignment.center,
+      );
+    }else{
+      return Image.file(
+        _image,
+        fit: BoxFit.contain,
+        alignment: Alignment.center,
+      );
+    }
+  }
 }
 
 class FormAddEvent extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  final EventformBloc eventformBloc;
   final File image;
+  final bool isEdit;
+  final dataEdit;
 
-  FormAddEvent({Key key, this.scaffoldKey, this.eventformBloc, this.image})
-      : super(key: key);
+  FormAddEvent({Key key, this.scaffoldKey, this.image, this.isEdit, this.dataEdit}) : super(key: key);
 
   @override
   _FormAddEventState createState() => _FormAddEventState();
@@ -225,157 +246,175 @@ class FormAddEvent extends StatefulWidget {
 
 class _FormAddEventState extends State<FormAddEvent> {
   var _formKey = GlobalKey<FormState>();
-
   var _eventNameController = TextEditingController();
   var _detailController = TextEditingController();
   var _addressController = TextEditingController();
   var _priceController = TextEditingController();
   var _ticketController = TextEditingController();
   var _takController = TextEditingController();
-
+  var _eventformBloc;
   String _selectedCategory;
-
+  List _category = new List();
   FocusNode _detailFocus = FocusNode();
   FocusNode _priceFocus = FocusNode();
   FocusNode _takFocus = FocusNode();
 
   String _time = 'Time';
   String _dateRange = 'Pick Date';
-@override
+  @override
   void initState() {
     super.initState();
+    _eventformBloc = BlocProvider.of<EventformBloc>(context);
+
     _selectedCategory = null;
+    if (_eventformBloc.currentState is InEventformState) {
+      var _curState = _eventformBloc.currentState;
+      _category = _curState.category.map((v) => v).toList();
+
+      if (_curState.dataEdit != null) {
+        _eventNameController.text = _curState.dataEdit['eventName'];
+        _detailController.text = _curState.dataEdit['eventDetail'];
+        _addressController.text = _curState.dataEdit['eventAddress'];
+        _priceController.text = _curState.dataEdit['eventPrice'].toString();
+        _ticketController.text =
+            _curState.dataEdit['eventAvaTicket'].toString();
+        _takController.text = _curState.dataEdit['eventTak'].toString();
+
+        _selectedCategory = _curState.dataEdit['eventCategory'];
+        _time = _curState.dataEdit['eventTime'];
+        _dateRange = _curState.dataEdit['eventDate'];
+      }
+    }
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
-        bloc: widget.eventformBloc,
-        builder: (context, currentState) {
-          return Container(
-              child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                CustomField(
-                  controller: _eventNameController,
-                  focusTo: _detailFocus,
-                  textInputAction: TextInputAction.next,
-                  label: "Event Name",
-                ),
-                CustomMultiField(
-                    focusOwn: _detailFocus,
-                    controller: _detailController,
-                    label: "Detail"),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: Sizing.verticalPaddingForm),
-                  child: DropdownButton(
-                    items: currentState is InEventformState ? 
-                    currentState.category
-                        .map((String value) {
-                          
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(): null,
-                    underline: Container(color: Colors.black54, height: 1),
-                    hint: Text('Select category'),
-                    disabledHint: Text('Category not available'),
-                    elevation: 15,
-                    value: _selectedCategory,
-                    isExpanded: true,
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.black87,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCategory = value;
-                      });
-                    },
-                  ),
-                ),
-                CustomDateTime(
-                  callbackDateRange: (value) =>
-                      setState(() => _dateRange = value),
-                  callbackTime: (value) => setState(() => _time = value),
-                ),
-                CustomMultiField(
-                    controller: _addressController, label: "Address"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Flexible(
-                      flex: 1,
-                      child: CustomField(
-                        controller: _ticketController,
-                        focusTo: _takFocus,
-                        textInputType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        label: "Available Ticket",
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: CustomField(
-                        controller: _takController,
-                        focusOwn: _takFocus,
-                        focusTo: _priceFocus,
-                        textInputType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        label: "TAK",
-                      ),
-                    ),
-                  ],
-                ),
-                CustomField(
-                  focusOwn: _priceFocus,
-                  controller: _priceController,
-                  textInputType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
-                  label: "Price",
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Align(alignment: Alignment.bottomCenter, child: btnSubmit())
-              ],
+    return Container(
+        child: Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          CustomField(
+            controller: _eventNameController,
+            focusTo: _detailFocus,
+            textInputAction: TextInputAction.next,
+            label: "Event Name",
+          ),
+          CustomMultiField(
+              focusOwn: _detailFocus,
+              controller: _detailController,
+              label: "Detail"),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                vertical: Sizing.verticalPaddingForm),
+            child: DropdownButton(
+              items: _category.map((value) {
+                return DropdownMenuItem(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              underline: Container(color: Colors.black54, height: 1),
+              hint: Text('Select category'),
+              disabledHint: Text('Category not available'),
+              elevation: 15,
+              value: _selectedCategory,
+              isExpanded: true,
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.black87,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
             ),
-          ));
-        });
+          ),
+          CustomDateTime(
+            date: _dateRange,
+            time: _time,
+            callbackDateRange: (value) => setState(() => _dateRange = value),
+            callbackTime: (value) => setState(() => _time = value),
+          ),
+          CustomMultiField(controller: _addressController, label: "Address"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: CustomField(
+                  controller: _ticketController,
+                  focusTo: _takFocus,
+                  textInputType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  label: "Available Ticket",
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Flexible(
+                flex: 1,
+                child: CustomField(
+                  controller: _takController,
+                  focusOwn: _takFocus,
+                  focusTo: _priceFocus,
+                  textInputType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  label: "TAK",
+                ),
+              ),
+            ],
+          ),
+          CustomField(
+            focusOwn: _priceFocus,
+            controller: _priceController,
+            textInputType: TextInputType.number,
+            textInputAction: TextInputAction.done,
+            label: "Price",
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Align(alignment: Alignment.bottomCenter, child: btnSubmit())
+        ],
+      ),
+    ));
   }
 
   Widget btnSubmit() {
-    return BlocBuilder(
-        bloc: widget.eventformBloc,
-        builder: (
-          BuildContext context,
-          EventformState currentState,
-        ) {
-          if (currentState is LoadingAddEventState)
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor:
-                    new AlwaysStoppedAnimation<Color>(Coloring.colorMain),
-              ),
-            );
-          return CustomSubmitButton(
-            event: () => _onSubmit(),
-            icon: Icons.add_circle,
-            label: 'Add Event',
-          );
-        });
+    if (_eventformBloc.currentState is LoadingAddEventState)
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Coloring.colorMain),
+        ),
+      );
+
+    if (_eventformBloc.currentState is InEventformState) {
+      var dataEdit = _eventformBloc.currentState.dataEdit;
+      if (dataEdit != null) {
+        return CustomSubmitButton(
+          event: () => _onSubmit(),
+          icon: Icons.add_circle,
+          label: 'Edit Event',
+        );
+      } else {
+        return CustomSubmitButton(
+          event: () => _onSubmit(),
+          icon: Icons.add_circle,
+          label: 'Add Event',
+        );
+      }
+    }
   }
 
   _onSubmit() {
-    var currentState = widget.eventformBloc.currentState as InEventformState;
+    var currentState = _eventformBloc.currentState as InEventformState;
+
     if (widget.image == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Image can\'t be empty'),
@@ -387,7 +426,9 @@ class _FormAddEventState extends State<FormAddEvent> {
         duration: Duration(milliseconds: 1500),
       ));
     } else if (_formKey.currentState.validate()) {
-      widget.eventformBloc.dispatch(SubmitEventformEvent(
+      _eventformBloc.dispatch(SubmitEventformEvent(
+        widget.isEdit,
+        widget.dataEdit,
         currentState.user.email,
         widget.image,
         _eventNameController.text,

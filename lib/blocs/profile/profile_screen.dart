@@ -9,32 +9,29 @@ import 'package:avataaar_image/avataaar_image.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     Key key,
-    @required ProfileBloc profileBloc,
-  })  : _profileBloc = profileBloc,
+  })  :
         super(key: key);
-
-  final ProfileBloc _profileBloc;
 
   @override
   ProfileScreenState createState() {
-    return new ProfileScreenState(_profileBloc);
+    return new ProfileScreenState();
   }
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  final ProfileBloc _profileBloc;
-  ProfileScreenState(this._profileBloc);
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
     super.initState();
+    _profileBloc = ProfileBloc();
     this._profileBloc.dispatch(LoadProfileEvent());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _profileBloc.dispose();
+//    _profileBloc.dispose();
   }
 
   @override
@@ -48,7 +45,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         }
       },
       child: BlocBuilder<ProfileEvent, ProfileState>(
-          bloc: widget._profileBloc,
+          bloc: _profileBloc,
           builder: (
             BuildContext context,
             ProfileState currentState,
@@ -177,6 +174,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future _buildShowDialog(BuildContext context) {
+    print(_profileBloc.state);
     return showDialog(
         context: context,
         builder: (BuildContext context) {

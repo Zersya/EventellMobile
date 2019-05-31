@@ -15,6 +15,10 @@ abstract class EventformEvent {
 }
 
 class LoadEventformEvent extends EventformEvent {
+  final eventId;
+
+  LoadEventformEvent(this.eventId);
+
   @override
   String toString() => 'LoadEventformEvent';
 
@@ -22,20 +26,20 @@ class LoadEventformEvent extends EventformEvent {
   Future<EventformState> applyAsync(
       {EventformState currentState, EventformBloc bloc}) async {
     try {
-
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
       DocumentSnapshot _doc = await Firestore.instance
           .collection('utility')
           .document('category')
           .get();
-          
+
       List<String> _category = new List<String>();
-      for(var item in _doc.data.values.first){
+      for (var item in _doc.data.values.first) {
         _category.add(item);
       }
-      
-      return new InEventformState(_user, _category);
+      DocumentSnapshot _docEvents =
+          await Firestore.instance.collection('events').document(eventId).get();
+      return new InEventformState(_user, _category, _docEvents.data);
     } catch (_) {
       print('LoadEventformEvent ' + _?.toString());
       return new ErrorEventformState(_?.toString());
@@ -44,7 +48,9 @@ class LoadEventformEvent extends EventformEvent {
 }
 
 class SubmitEventformEvent extends EventformEvent {
-  final String createdBy,
+  final bool isEdit;
+  final String dataEdit,
+      createdBy,
       eventName,
       eventDetail,
       eventCategory,
@@ -55,6 +61,8 @@ class SubmitEventformEvent extends EventformEvent {
   final File image;
 
   SubmitEventformEvent(
+      this.isEdit,
+      this.dataEdit,
       this.createdBy,
       this.image,
       this.eventName,
@@ -76,36 +84,64 @@ class SubmitEventformEvent extends EventformEvent {
   Future<EventformState> applyAsync(
       {EventformState currentState, EventformBloc bloc}) async {
     try {
-      final String filename = this.eventName +
-          Random().nextInt(100).toString() +
-          extension(image.path);
-      final StorageReference storageRef =
-          FirebaseStorage.instance.ref().child(filename);
-      final StorageUploadTask uploadTask = storageRef.putFile(image);
-      final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
-      final String url = (await downloadUrl.ref.getDownloadURL());
+      if(!isEdit) {
+        final String filename = this.eventName +
+            Random().nextInt(100).toString() +
+            extension(image.path);
+        final StorageReference storageRef =
+        FirebaseStorage.instance.ref().child(filename);
+        final StorageUploadTask uploadTask = storageRef.putFile(image);
+        final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+        final String url = (await downloadUrl.ref.getDownloadURL());
 
-      String docId = Firestore.instance.collection('events').document().documentID;
+        String docId =
+            Firestore.instance
+                .collection('events')
+                .document()
+                .documentID;
 
-      await Firestore.instance.collection('events').document(docId).setData({
-        'createdBy': this.createdBy,
-        'eventName': this.eventName,
-        'eventDetail': this.eventDetail,
-        'eventCategory': this.eventCategory,
-        'eventTime': this.eventTime,
-        'eventDate': this.eventDate,
-        'eventAddress': this.eventAddress,
-        'eventAvaTicket': this.eventAvaTicket,
-        'eventTak': this.eventTak,
-        'eventPrice': this.eventPrice,
-        'eventImage': url
-      });
+        await Firestore.instance.collection('events').document(docId).setData({
+          'eventId': docId,
+          'createdBy': this.createdBy,
+          'eventName': this.eventName,
+          'eventDetail': this.eventDetail,
+          'eventCategory': this.eventCategory,
+          'eventTime': this.eventTime,
+          'eventDate': this.eventDate,
+          'eventAddress': this.eventAddress,
+          'eventAvaTicket': this.eventAvaTicket,
+          'eventTak': this.eventTak,
+          'eventPrice': this.eventPrice,
+          'eventImage': url
+        });
 
-      await Firestore.instance.collection('users').document(this.createdBy).collection('events').document(docId).setData({
-        'isBuyed'  : false,
-        'isCreated': true,
-        'isLiked': false,
-      });
+        await Firestore.instance
+            .collection('users')
+            .document(this.createdBy)
+            .collection('events')
+            .document(docId)
+            .setData({
+          'isBuyed': false,
+          'isCreated': true,
+          'isLiked': false,
+        });
+      }else{
+
+        await Firestore.instance.collection('events').document(this.dataEdit).updateData({
+          'eventId': this.dataEdit,
+          'createdBy': this.createdBy,
+          'eventName': this.eventName,
+          'eventDetail': this.eventDetail,
+          'eventCategory': this.eventCategory,
+          'eventTime': this.eventTime,
+          'eventDate': this.eventDate,
+          'eventAddress': this.eventAddress,
+          'eventAvaTicket': this.eventAvaTicket,
+          'eventTak': this.eventTak,
+          'eventPrice': this.eventPrice,
+        });
+
+      }
 
       return AddedState();
     } catch (err) {

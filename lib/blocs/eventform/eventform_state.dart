@@ -24,15 +24,16 @@ class UnEventformState extends EventformState {
 class InEventformState extends EventformState {
   final FirebaseUser user;
   final List<String> category;
+  final Map<String, dynamic> dataEdit;
 
-  InEventformState(this.user, this.category);
+  InEventformState(this.user, this.category, this.dataEdit);
   
   @override
   String toString() => 'InEventformState';
 
   @override
   EventformState getStateCopy() {
-    return InEventformState(user, category);
+    return InEventformState(user, category, dataEdit);
   }
 }
 

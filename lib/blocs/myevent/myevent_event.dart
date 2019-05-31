@@ -21,6 +21,7 @@ class LoadMyeventEvent extends MyeventEvent {
       await Future.delayed(new Duration(seconds: 2));
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
+      print(_user.email);
       Stream<QuerySnapshot> _stream = Firestore.instance
           .collection('events')
           .where('createdBy', isEqualTo: _user.email)

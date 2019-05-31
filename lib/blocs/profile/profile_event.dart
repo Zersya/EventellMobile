@@ -22,7 +22,6 @@ class LoadProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      await Future.delayed(new Duration(seconds: 2));
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
       var _avataaar =  Avataaar.random();
@@ -43,7 +42,8 @@ class LogoutProfileEvent extends ProfileEvent {
   Future<ProfileState> applyAsync(
       {ProfileState currentState, ProfileBloc bloc}) async {
     try {
-      Future.wait([FirebaseAuth.instance.signOut()]);
+      FirebaseAuth.instance.signOut();
+      print('lala');
       LoginBloc().dispatch(LoadLoginEvent());
       MyeventBloc().dispatch(LogoutMyeventEvent());
 
