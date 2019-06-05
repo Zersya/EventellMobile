@@ -84,21 +84,11 @@ class SubmitEventformEvent extends EventformEvent {
   Future<EventformState> applyAsync(
       {EventformState currentState, EventformBloc bloc}) async {
     try {
-      if(!isEdit) {
-        final String filename = this.eventName +
-            Random().nextInt(100).toString() +
-            extension(image.path);
-        final StorageReference storageRef =
-        FirebaseStorage.instance.ref().child(filename);
-        final StorageUploadTask uploadTask = storageRef.putFile(image);
-        final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
-        final String url = (await downloadUrl.ref.getDownloadURL());
+      if (!isEdit) {
+        final String url = await _uploadImage(this.image);
 
         String docId =
-            Firestore.instance
-                .collection('events')
-                .document()
-                .documentID;
+            Firestore.instance.collection('events').document().documentID;
 
         await Firestore.instance.collection('events').document(docId).setData({
           'eventId': docId,
@@ -125,27 +115,62 @@ class SubmitEventformEvent extends EventformEvent {
           'isCreated': true,
           'isLiked': false,
         });
-      }else{
-
-        await Firestore.instance.collection('events').document(this.dataEdit).updateData({
-          'eventId': this.dataEdit,
-          'createdBy': this.createdBy,
-          'eventName': this.eventName,
-          'eventDetail': this.eventDetail,
-          'eventCategory': this.eventCategory,
-          'eventTime': this.eventTime,
-          'eventDate': this.eventDate,
-          'eventAddress': this.eventAddress,
-          'eventAvaTicket': this.eventAvaTicket,
-          'eventTak': this.eventTak,
-          'eventPrice': this.eventPrice,
-        });
-
+      } else {
+        if (this.image != null) {
+          final String url = await _uploadImage(this.image);
+          await Firestore.instance
+              .collection('events')
+              .document(this.dataEdit)
+              .updateData({
+            'eventId': this.dataEdit,
+            'createdBy': this.createdBy,
+            'eventName': this.eventName,
+            'eventDetail': this.eventDetail,
+            'eventCategory': this.eventCategory,
+            'eventTime': this.eventTime,
+            'eventDate': this.eventDate,
+            'eventAddress': this.eventAddress,
+            'eventAvaTicket': this.eventAvaTicket,
+            'eventTak': this.eventTak,
+            'eventPrice': this.eventPrice,
+            'eventImage': url
+          });
+        } else {
+          await Firestore.instance
+              .collection('events')
+              .document(this.dataEdit)
+              .updateData({
+            'eventId': this.dataEdit,
+            'createdBy': this.createdBy,
+            'eventName': this.eventName,
+            'eventDetail': this.eventDetail,
+            'eventCategory': this.eventCategory,
+            'eventTime': this.eventTime,
+            'eventDate': this.eventDate,
+            'eventAddress': this.eventAddress,
+            'eventAvaTicket': this.eventAvaTicket,
+            'eventTak': this.eventTak,
+            'eventPrice': this.eventPrice,
+          });
+        }
       }
 
       return AddedState();
     } catch (err) {
       return ErrorEventformState(err.message);
     }
+  }
+
+  Future<String> _uploadImage(image) async {
+    final String filename = this.eventName +
+        Random().nextInt(100).toString() +
+        extension(image.path);
+    final StorageReference storageRef =
+        FirebaseStorage.instance.ref().child(filename);
+    final StorageUploadTask uploadTask = storageRef.putFile(image);
+    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+    final String url = (await downloadUrl.ref.getDownloadURL());
+
+    return url;
   }
 }

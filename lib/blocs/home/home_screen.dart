@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/blocs/home/index.dart';
@@ -8,25 +10,21 @@ import 'package:eventell/pages/auth_page.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key key,
-    @required HomeBloc homeBloc,
-  })  : _homeBloc = homeBloc,
-        super(key: key);
-
-  final HomeBloc _homeBloc;
+  }) : super(key: key);
 
   @override
   HomeScreenState createState() {
-    return new HomeScreenState(_homeBloc);
+    return new HomeScreenState();
   }
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  final HomeBloc _homeBloc;
-  HomeScreenState(this._homeBloc);
+  HomeBloc _homeBloc;
 
   @override
   void initState() {
     super.initState();
+    _homeBloc = HomeBloc();
     this._homeBloc.dispatch(LoadHomeEvent());
   }
 
@@ -50,7 +48,7 @@ class HomeScreenState extends State<HomeScreen> {
         }
       },
       child: BlocBuilder<HomeEvent, HomeState>(
-          bloc: widget._homeBloc,
+          bloc: _homeBloc,
           builder: (
             BuildContext context,
             HomeState currentState,
@@ -73,17 +71,20 @@ class HomeScreenState extends State<HomeScreen> {
                 Column(
                   children: <Widget>[
                     Expanded(
-                      child: buildHome(currentState.user),
+                      child: buildHome(
+                          currentState.user, currentState.streamListEvent),
                     ),
                   ],
                 ),
               ]);
             }
+
+            return Container();
           }),
     );
   }
 
-  ListView buildHome(_user) {
+  buildHome(_user, _streamListEvent) {
     var _userEmail = _user.email.toString().split('@')[0][0].toUpperCase() +
         _user.email.toString().split('@')[0].substring(1);
 
@@ -150,12 +151,12 @@ class HomeScreenState extends State<HomeScreen> {
         SizedBox(
           height: 10,
         ),
-        buildListEvent(),
+        buildListEvent(_streamListEvent),
       ],
     );
   }
 
-  SizedBox buildRecomendEvent() {
+  buildRecomendEvent() {
     return SizedBox(
       height: 150,
       child: PageView.builder(
@@ -178,48 +179,80 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding buildListEvent() {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: Sizing.paddingContent, right: Sizing.paddingContent),
-      child: ListView.separated(
-        itemCount: 12,
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          return SizedBox(
-            height: 150,
-            child: Card(
-              elevation: 8,
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[Text('Hallo ' + index.toString())],
-                ),
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          if ((index % 3) == 0 && index != 0)
-            return SizedBox(
-              height: 50,
-              child: Card(
-                color: Colors.redAccent,
-                elevation: 8,
-                child: Container(
+  buildListEvent(_streamListEvent) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: _streamListEvent,
+        builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator());
+          }
+          return Padding(
+            padding: const EdgeInsets.only(
+                left: Sizing.paddingContent, right: Sizing.paddingContent),
+            child: ListView.separated(
+              itemCount: snapshot.data.documents.length,
+              shrinkWrap: true,
+              reverse: true,
+              physics: ScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                var data = snapshot.data.documents[index].data;
+                return Card(
+                  elevation: 8,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[Text('Iklan ' + index.toString())],
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              height: 150,
+                              imageUrl: data['eventImage'],
+                              placeholder: (context, url) =>
+                                  new CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  new Icon(Icons.error),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 2,
+                              child: Column(
+                                children: <Widget>[
+                                  Text(data['eventName'],
+                                      style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(
+                                      'Available Ticket : ' + data['eventAvaTicket'].toString()),
+                                  Text('Price : ' + data['eventPrice'].toString()),
+                                ],
+                              )),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-              ),
-            );
-          else
-            return SizedBox();
-        },
-      ),
-    );
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                if ((index % 3) == 0 && index != 0)
+                  return SizedBox(
+                    height: 50,
+                    child: Card(
+                      color: Colors.redAccent,
+                      elevation: 8,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[Text('Iklan ' + index.toString())],
+                        ),
+                      ),
+                    ),
+                  );
+                else
+                  return SizedBox();
+              },
+            ),
+          );
+        });
   }
 }
 

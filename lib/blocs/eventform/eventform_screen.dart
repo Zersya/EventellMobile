@@ -75,7 +75,7 @@ class EventformScreenState extends State<EventformScreen> {
             }
             return BlocProvider<EventformBloc>(
               bloc: _eventformBloc,
-              child: ScreenForm(dataEdit:  widget.dataEdit),
+              child: ScreenForm(dataEdit: widget.dataEdit),
             );
           }),
     );
@@ -105,7 +105,9 @@ class EventformScreenState extends State<EventformScreen> {
                       size: 45,
                     ),
                     Text(
-                      StringWord.eventSuccess,
+                      widget.dataEdit == null
+                          ? StringWord.eventSuccessAdded
+                          : StringWord.eventSuccessEdited,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -133,6 +135,7 @@ class _ScreenFormState extends State<ScreenForm> {
   File _image;
   var _eventformBloc;
 
+  String _curImageUrl = null;
   bool _isEdit = false;
 
   @override
@@ -141,11 +144,12 @@ class _ScreenFormState extends State<ScreenForm> {
     _eventformBloc = BlocProvider.of<EventformBloc>(context);
 
     _isEdit = (_eventformBloc.currentState.dataEdit != null);
+    _curImageUrl = _eventformBloc.currentState.dataEdit['eventImage'];
   }
 
   Future getImage(source) async {
     var image = await ImagePicker.pickImage(
-            source: source, maxHeight: 720, maxWidth: 1280);
+        source: source, maxHeight: 720, maxWidth: 1280);
 
     setState(() {
       _image = image;
@@ -174,12 +178,8 @@ class _ScreenFormState extends State<ScreenForm> {
             SizedBox(
               height: 20,
             ),
-            BlocBuilder(
-              bloc: _eventformBloc,
-              builder: (context, currentState) {
-                return FormAddEvent(image: _image, isEdit: _isEdit, dataEdit: widget.dataEdit);
-              },
-            )
+            FormAddEvent(
+                image: _image, isEdit: _isEdit, dataEdit: widget.dataEdit),
           ],
         ),
       ),
@@ -215,14 +215,22 @@ class _ScreenFormState extends State<ScreenForm> {
   }
 
   Widget conditionImage() {
-    if(_image == null) {
+    if (_image == null && _isEdit)
+      return CachedNetworkImage(
+        fit: BoxFit.cover,
+        height: 100,
+        imageUrl: _curImageUrl,
+        placeholder: (context, url) => new CircularProgressIndicator(),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      );
+    if (_image == null) {
       return Align(
         child: Text(
           'Add your poster',
         ),
         alignment: Alignment.center,
       );
-    }else{
+    } else {
       return Image.file(
         _image,
         fit: BoxFit.contain,
@@ -238,7 +246,9 @@ class FormAddEvent extends StatefulWidget {
   final bool isEdit;
   final dataEdit;
 
-  FormAddEvent({Key key, this.scaffoldKey, this.image, this.isEdit, this.dataEdit}) : super(key: key);
+  FormAddEvent(
+      {Key key, this.scaffoldKey, this.image, this.isEdit, this.dataEdit})
+      : super(key: key);
 
   @override
   _FormAddEventState createState() => _FormAddEventState();
@@ -415,7 +425,7 @@ class _FormAddEventState extends State<FormAddEvent> {
   _onSubmit() {
     var currentState = _eventformBloc.currentState as InEventformState;
 
-    if (widget.image == null) {
+    if (widget.image == null && currentState.dataEdit['eventImage'] == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Image can\'t be empty'),
         duration: Duration(milliseconds: 1200),

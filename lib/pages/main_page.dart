@@ -13,20 +13,13 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
-  HomeBloc _homeBloc;
-  ProfileBloc _profileBloc;
-
   List<Widget> listPage;
 
   @override
   void initState() {
     super.initState();
-    _homeBloc = HomeBloc();
-//    _profileBloc = ProfileBloc();
     listPage = [
-      HomeScreen(
-        homeBloc: _homeBloc,
-      ),
+      HomeScreen(),
       null,
       null,
       null,

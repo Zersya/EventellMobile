@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -23,15 +24,16 @@ class UnHomeState extends HomeState {
 /// Initialized
 class InHomeState extends HomeState {
   final user;
+  final Stream<QuerySnapshot> streamListEvent;
 
-  InHomeState(this.user);
+  InHomeState(this.user, this.streamListEvent);
 
   @override
   String toString() => 'InHomeState';
 
   @override
   HomeState getStateCopy() {
-    return InHomeState(user);
+    return InHomeState(user, streamListEvent);
   }
 }
 

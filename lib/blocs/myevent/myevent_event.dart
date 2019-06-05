@@ -18,7 +18,6 @@ class LoadMyeventEvent extends MyeventEvent {
   Future<MyeventState> applyAsync(
       {MyeventState currentState, MyeventBloc bloc}) async {
     try {
-      await Future.delayed(new Duration(seconds: 2));
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
       print(_user.email);

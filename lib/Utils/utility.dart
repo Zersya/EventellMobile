@@ -72,7 +72,9 @@ class StringWord{
   static const String loginMessage2 = "Log in";
 
   static const String hintSearch = "search for events";
-  static const String eventSuccess = "Your event was successfully added";
+  static const String eventSuccessAdded = "Your event was successfully added";
+  static const String eventSuccessEdited = "Your event was successfully edited";
+
 
   static const String emptyData = "No data !!";
 

@@ -12,7 +12,7 @@ class EventformPage extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         backgroundColor: Coloring.colorMain,
-        title: new Text("Create Event", style: TextStyle(color: Colors.black87),),
+        title: dataEdit != null ? _textAppBar('Edit Event') : _textAppBar('Create Event'),
         iconTheme: IconThemeData(
           color: Colors.black87
         ),
@@ -20,4 +20,6 @@ class EventformPage extends StatelessWidget {
       body: new EventformScreen(dataEdit: dataEdit),
     );
   }
+
+  Widget _textAppBar(text) => new Text(text, style: TextStyle(color: Colors.black87),);
 }
