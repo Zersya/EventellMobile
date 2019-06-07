@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventell/Utils/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/blocs/home/index.dart';
@@ -196,39 +197,72 @@ class HomeScreenState extends State<HomeScreen> {
               physics: ScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 var data = snapshot.data.documents[index].data;
-                return Card(
-                  elevation: 8,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              height: 150,
-                              imageUrl: data['eventImage'],
-                              placeholder: (context, url) =>
-                                  new CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  new Icon(Icons.error),
-                            ),
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushNamed(Router.detailevent, arguments: data);
+                  },
+                  child: Card(
+                    elevation: 8,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            height: 150,
+                            imageUrl: data['eventImage'],
+                            placeholder: (context, url) =>
+                                new CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                new Icon(Icons.error),
                           ),
-                          Expanded(
-                              flex: 2,
+                        ),
+                        Expanded(
+                            flex: 2,
+                            child: Container(
+                              padding: EdgeInsets.all(10.0),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(data['eventName'],
-                                      style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(
-                                      'Available Ticket : ' + data['eventAvaTicket'].toString()),
-                                  Text('Price : ' + data['eventPrice'].toString()),
+                                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+
+                                  Text('Rp. ' + data['eventPrice'].toString(),
+                                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Icon(MdiIcons.clockOutline, size: 13.0, color: Coloring.colorMain,),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Text(data['eventDate'] + "\n" + data['eventTime'],
+                                            style: TextStyle(fontSize: 13.0)),
+                                      ),
+                                    ],
+                                  ),
+
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Icon(Icons.location_on, size: 13.0, color: Coloring.colorMain,),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Text(data['eventAddress'],
+                                            style: TextStyle(fontSize: 13.0)),
+                                      )
+                                    ],
+                                  ),
+
                                 ],
-                              )),
-                        ],
-                      )
-                    ],
+                              ),
+                            )),
+                      ],
+                    ),
                   ),
                 );
               },

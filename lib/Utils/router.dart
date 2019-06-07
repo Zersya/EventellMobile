@@ -1,4 +1,5 @@
 
+import 'package:eventell/blocs/detailevent/detailevent_page.dart';
 import 'package:eventell/blocs/eventform/eventform_page.dart';
 import 'package:eventell/blocs/myevent/myevent_page.dart';
 import 'package:eventell/pages/auth_page.dart';
@@ -14,6 +15,8 @@ class Router {
   static const String mainPage = '/mainPage';
   static const String eventform = '/eventform';
   static const String myevent = '/myevent';
+  static const String detailevent = '/detailevent';
+
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -42,6 +45,11 @@ class Router {
         return MaterialPageRoute(
             settings: RouteSettings(name: myevent),
             builder: (_) => MyeventPage());
+      case detailevent:
+        var data = settings.arguments;
+        return MaterialPageRoute(
+            settings: RouteSettings(name: detailevent),
+            builder: (_) => DetaileventPage(detailEvent: data,));
     }
   }
 }

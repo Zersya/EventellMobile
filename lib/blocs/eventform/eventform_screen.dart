@@ -144,7 +144,8 @@ class _ScreenFormState extends State<ScreenForm> {
     _eventformBloc = BlocProvider.of<EventformBloc>(context);
 
     _isEdit = (_eventformBloc.currentState.dataEdit != null);
-    _curImageUrl = _eventformBloc.currentState.dataEdit['eventImage'];
+    if(_isEdit)
+      _curImageUrl = _eventformBloc.currentState.dataEdit['eventImage'];
   }
 
   Future getImage(source) async {
@@ -412,14 +413,13 @@ class _FormAddEventState extends State<FormAddEvent> {
           icon: Icons.add_circle,
           label: 'Edit Event',
         );
-      } else {
-        return CustomSubmitButton(
-          event: () => _onSubmit(),
-          icon: Icons.add_circle,
-          label: 'Add Event',
-        );
       }
     }
+    return CustomSubmitButton(
+      event: () => _onSubmit(),
+      icon: Icons.add_circle,
+      label: 'Add Event',
+    );
   }
 
   _onSubmit() {
