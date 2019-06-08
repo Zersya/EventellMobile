@@ -34,8 +34,6 @@ class CustomField extends StatelessWidget {
           textInputAction: _textInputAction,
           controller: _controller,
           decoration: InputDecoration(
-            fillColor: Color.fromRGBO(233, 233, 233, 1),
-            filled: true,
             border: OutlineInputBorder(
               borderRadius:
                   BorderRadius.circular(Sizing.borderRadiusFormText),

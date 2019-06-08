@@ -101,6 +101,9 @@ class SubmitEventformEvent extends EventformEvent {
           'eventAddress': this.eventAddress,
           'eventAvaTicket': this.eventAvaTicket,
           'eventTak': this.eventTak,
+          'eventLove': 0,
+          'eventAttended': 0,
+          'eventLoved': List<String>(),
           'eventPrice': this.eventPrice,
           'eventImage': url
         });
@@ -151,6 +154,7 @@ class SubmitEventformEvent extends EventformEvent {
             'eventAvaTicket': this.eventAvaTicket,
             'eventTak': this.eventTak,
             'eventPrice': this.eventPrice,
+
           });
         }
       }

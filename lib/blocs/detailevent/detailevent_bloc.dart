@@ -4,11 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'index.dart';
 
 class DetaileventBloc extends Bloc<DetaileventEvent, DetaileventState> {
-  static final DetaileventBloc _detaileventBlocSingleton = new DetaileventBloc._internal();
-  factory DetaileventBloc() {
-    return _detaileventBlocSingleton;
-  }
-  DetaileventBloc._internal();
+//  static final DetaileventBloc _detaileventBlocSingleton = new DetaileventBloc._internal();
+//  factory DetaileventBloc() {
+//    return _detaileventBlocSingleton;
+//  }
+//  DetaileventBloc._internal();
 
   DetaileventState get initialState => new UnDetaileventState();
 

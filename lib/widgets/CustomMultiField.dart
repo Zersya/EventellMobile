@@ -29,8 +29,6 @@ class CustomMultiField extends StatelessWidget {
           focusNode: _focusOwn,
           controller: _controller,
           decoration: InputDecoration(
-            fillColor: Color.fromRGBO(233, 233, 233, 1),
-            filled: true,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                     Radius.circular(Sizing.borderRadiusFormText))),

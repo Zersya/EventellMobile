@@ -24,12 +24,16 @@ class UnDetaileventState extends DetaileventState {
 /// Initialized
 class InDetaileventState extends DetaileventState {
 
+  final String email;
+
+  InDetaileventState(this.email);
+
   @override
   String toString() => 'InDetaileventState';
 
   @override
   DetaileventState getStateCopy() {
-    return InDetaileventState();
+    return InDetaileventState(this.email);
   }
 }
 
@@ -44,5 +48,22 @@ class ErrorDetaileventState extends DetaileventState {
   @override
   DetaileventState getStateCopy() {
     return ErrorDetaileventState(this.errorMessage);
+  }
+}
+
+class LovedDetaileventState extends DetaileventState {
+
+  final int eventLove;
+  final List eventLoved;
+  final bool isLoved;
+
+  LovedDetaileventState(this.eventLove, this.eventLoved, this.isLoved);
+
+  @override
+  String toString() => 'LovedDetaileventState ';
+
+  @override
+  DetaileventState getStateCopy() {
+    return LovedDetaileventState (this.eventLove, this.eventLoved, this.isLoved);
   }
 }
