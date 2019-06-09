@@ -1,4 +1,4 @@
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:eventell/blocs/myevent/index.dart';
 

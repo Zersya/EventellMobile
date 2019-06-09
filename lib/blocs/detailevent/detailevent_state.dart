@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:eventell/shared/models/user.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -56,14 +57,15 @@ class LovedDetaileventState extends DetaileventState {
   final int eventLove;
   final List eventLoved;
   final bool isLoved;
+  final User user;
 
-  LovedDetaileventState(this.eventLove, this.eventLoved, this.isLoved);
+  LovedDetaileventState(this.eventLove, this.eventLoved, this.isLoved, this.user);
 
   @override
   String toString() => 'LovedDetaileventState ';
 
   @override
   DetaileventState getStateCopy() {
-    return LovedDetaileventState (this.eventLove, this.eventLoved, this.isLoved);
+    return LovedDetaileventState (this.eventLove, this.eventLoved, this.isLoved, this.user);
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:eventell/blocs/register/index.dart';
 import 'package:eventell/blocs/login/index.dart';
 import 'package:flutter/widgets.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 
 class AuthPage extends StatefulWidget {
   @override

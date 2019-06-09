@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/blocs/eventform/index.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 import 'package:eventell/widgets/CustomMultiField.dart';
 import 'package:eventell/widgets/CustomField.dart';
 import 'package:eventell/widgets/CustomDateTime.dart';

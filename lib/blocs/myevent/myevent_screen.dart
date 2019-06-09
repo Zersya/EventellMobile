@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 import 'package:eventell/widgets/CustomItemListEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

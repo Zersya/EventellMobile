@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eventell/blocs/eventform/index.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 
 class EventformPage extends StatelessWidget {
   final dataEdit;

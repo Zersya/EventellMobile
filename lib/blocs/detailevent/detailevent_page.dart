@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eventell/Utils/router.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/models/user.dart';
+import 'package:eventell/shared/router.dart';
+import 'package:eventell/shared/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -22,7 +23,6 @@ class _DetaileventPageState extends State<DetaileventPage> {
   int _ticket = 0;
 
   DetaileventBloc _detaileventBloc = DetaileventBloc();
-  Color _colorHeart = Colors.grey;
   bool isLoved = false;
 
   @override
@@ -38,6 +38,8 @@ class _DetaileventPageState extends State<DetaileventPage> {
   @override
   Widget build(BuildContext context) {
     var data = widget.data['dataEvent'];
+    User _user = widget.data['dataUser'];
+
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (context, innerBox) {
@@ -159,6 +161,7 @@ class _DetaileventPageState extends State<DetaileventPage> {
                                     data['eventLove'] = currentState.eventLove;
                                     data['eventLoved'] = currentState.eventLoved;
                                     isLoved = currentState.isLoved;
+                                    _user = currentState.user;
                                   });
                                   _detaileventBloc.dispatch(LoadDetaileventEvent());
                                 }
@@ -176,7 +179,9 @@ class _DetaileventPageState extends State<DetaileventPage> {
                                           LoveDetaileventEvent(
                                               data['eventId'],
                                               data['eventLove'],
-                                              data['eventLoved']));
+                                              data['eventLoved'],
+                                              _user
+                                          ));
                                     },
                                   )
                                 ],

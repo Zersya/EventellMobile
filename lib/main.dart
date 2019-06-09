@@ -1,8 +1,8 @@
-import 'package:eventell/Utils/router.dart';
+import 'package:eventell/shared/router.dart';
 import 'package:eventell/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 
-import 'Utils/utility.dart';
+import 'shared/utility.dart';
 
 
 void main() => runApp(MyApp());

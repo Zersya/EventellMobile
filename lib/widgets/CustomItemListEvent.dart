@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 import 'package:eventell/widgets/CustomSmallButton.dart';
 import 'package:flutter/material.dart';
 

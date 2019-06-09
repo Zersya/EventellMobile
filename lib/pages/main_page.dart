@@ -1,8 +1,9 @@
+import 'package:eventell/blocs/likes/likes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/blocs/home/index.dart';
 import 'package:eventell/blocs/profile/index.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -22,7 +23,7 @@ class _MainPageState extends State<MainPage> {
       HomeScreen(),
       null,
       null,
-      null,
+      LikesScreen(),
       ProfileScreen()
     ];
   }

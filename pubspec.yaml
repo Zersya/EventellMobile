@@ -40,6 +40,7 @@ dependencies:
   pinch_zoom_image: "^0.2.5"
   flutter_money_formatter: ^0.8.0
   provider: ^3.0.0
+  flutter_spinkit: ^3.1.0
 
 dev_dependencies:
   flutter_test:

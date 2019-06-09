@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventell/blocs/register/index.dart';
+import 'package:eventell/shared/models/user.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -49,6 +51,11 @@ class SubmitRegisterEvent extends RegisterEvent {
     FirebaseAuth _auth = FirebaseAuth.instance;
     FirebaseUser _user = await _auth.createUserWithEmailAndPassword(
         email: _email, password: _password);
+
+    await Firestore.instance.collection('users')
+        .document(_email)
+        .setData(User(email: _email,).toMap());
+
     return _user;
   }
 }

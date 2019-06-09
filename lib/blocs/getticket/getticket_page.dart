@@ -1,4 +1,4 @@
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 import 'package:eventell/widgets/CustomField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

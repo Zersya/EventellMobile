@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:eventell/Utils/utility.dart';
+import 'package:eventell/shared/utility.dart';
 
 
 class CustomSubmitButton extends StatefulWidget {
