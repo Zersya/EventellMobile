@@ -6,9 +6,9 @@ import 'package:eventell/shared/router.dart';
 import 'package:eventell/shared/utility.dart';
 import 'package:eventell/widgets/CircleButtonCategory.dart';
 import 'package:eventell/widgets/ListEvent.dart';
+import 'package:eventell/widgets/MoneyFormater.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -170,17 +170,8 @@ class HomeRecommended extends StatelessWidget {
                             Text(data['eventName'],
                                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                             Divider(height: 5,),
-                            Text(FlutterMoneyFormatter(
-                                amount: data['eventPrice'].toDouble(),
-                                settings: MoneyFormatterSettings(
-                                  symbol: 'Rp. ',
-                                  thousandSeparator: '.',
-                                  decimalSeparator: ',',
-                                  symbolAndNumberSeparator: ' ',
-                                  fractionDigits: 2,
-                                )
-                            ).output.symbolOnLeft,
-                                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+                            MoneyFormater(money: data['eventPrice'], textStyle: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
+
                             Divider(height: 5,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,

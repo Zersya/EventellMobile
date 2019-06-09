@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventell/blocs/eventform/eventform_state.dart';
+import 'package:eventell/widgets/SuccessDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -90,33 +91,9 @@ class EventformScreenState extends State<EventformScreen> {
           onTap: () {
             Navigator.of(context).popUntil(ModalRoute.withName('/mainPage'));
           },
-          child: Dialog(
-              backgroundColor: Coloring.colorMain,
-              child: Container(
-                width: MediaQuery.of(context).size.width / 3,
-                height: MediaQuery.of(context).size.height / 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.white,
-                      size: 45,
-                    ),
-                    Text(
-                      widget.dataEdit == null
-                          ? StringWord.eventSuccessAdded
-                          : StringWord.eventSuccessEdited,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizing.fontSuccessInfo,
-                      ),
-                    )
-                  ],
-                ),
-              )),
+          child: SuccessDialog(word: widget.dataEdit != null ?
+              StringWord.eventSuccessEdited :
+              StringWord.eventSuccessAdded,)
         );
       },
     );

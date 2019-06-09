@@ -3,6 +3,7 @@ import 'package:eventell/blocs/detailevent/detailevent_page.dart';
 import 'package:eventell/blocs/eventform/eventform_page.dart';
 import 'package:eventell/blocs/getticket/getticket_page.dart';
 import 'package:eventell/blocs/myevent/myevent_page.dart';
+import 'package:eventell/blocs/payment/payment_page.dart';
 import 'package:eventell/pages/auth_page.dart';
 import 'package:eventell/pages/main_page.dart';
 import 'package:eventell/pages/onboarding_page.dart';
@@ -18,6 +19,7 @@ class Router {
   static const String myevent = '/myevent';
   static const String detailevent = '/detailevent';
   static const String getticket = '/getticket';
+  static const String payment = '/payment';
 
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -56,7 +58,12 @@ class Router {
         final data = settings.arguments;
         return MaterialPageRoute(
             settings: RouteSettings(name: getticket),
-            builder: (_) => GetTicket(data: data,));
+            builder: (_) => GetTicket(dataOrder: data,));
+      case payment:
+        final data = settings.arguments;
+        return MaterialPageRoute(
+            settings: RouteSettings(name: payment),
+            builder: (_) => PaymentPage(data: data,));
     }
   }
 }

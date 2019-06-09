@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eventell/shared/models/user.dart';
 import 'package:eventell/shared/router.dart';
 import 'package:eventell/shared/utility.dart';
+import 'package:eventell/widgets/MoneyFormater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -29,8 +30,8 @@ class _DetaileventPageState extends State<DetaileventPage> {
   void initState() {
     List listLoved = widget.data['dataEvent']['eventLoved'];
     var user = widget.data['dataUser'];
-    listLoved.forEach((v){
-      if(v == user.email) isLoved = true;
+    listLoved.forEach((v) {
+      if (v == user.email) isLoved = true;
     });
     super.initState();
   }
@@ -121,17 +122,9 @@ class _DetaileventPageState extends State<DetaileventPage> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(
-                              FlutterMoneyFormatter(
-                                  amount: data['eventPrice'].toDouble(),
-                                  settings: MoneyFormatterSettings(
-                                    symbol: 'Rp. ',
-                                    thousandSeparator: '.',
-                                    decimalSeparator: ',',
-                                    symbolAndNumberSeparator: ' ',
-                                    fractionDigits: 2,
-                                  )).output.symbolOnLeft,
-                              style: TextStyle(fontSize: 18),
+                            MoneyFormater(
+                              money: data['eventPrice'],
+                              textStyle: TextStyle(fontSize: 18),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(15.0),
@@ -155,15 +148,17 @@ class _DetaileventPageState extends State<DetaileventPage> {
                             ),
                             BlocListener<DetaileventEvent, DetaileventState>(
                               bloc: _detaileventBloc,
-                              listener: (context, currentState){
-                                if(currentState is LovedDetaileventState){
+                              listener: (context, currentState) {
+                                if (currentState is LovedDetaileventState) {
                                   setState(() {
                                     data['eventLove'] = currentState.eventLove;
-                                    data['eventLoved'] = currentState.eventLoved;
+                                    data['eventLoved'] =
+                                        currentState.eventLoved;
                                     isLoved = currentState.isLoved;
                                     _user = currentState.user;
                                   });
-                                  _detaileventBloc.dispatch(LoadDetaileventEvent());
+                                  _detaileventBloc
+                                      .dispatch(LoadDetaileventEvent());
                                 }
                               },
                               child: Row(
@@ -173,15 +168,14 @@ class _DetaileventPageState extends State<DetaileventPage> {
                                     icon: Icon(
                                       MdiIcons.heart,
                                     ),
-                                    color: isLoved ? Colors.red:Colors.grey,
+                                    color: isLoved ? Colors.red : Colors.grey,
                                     onPressed: () {
                                       _detaileventBloc.dispatch(
                                           LoveDetaileventEvent(
                                               data['eventId'],
                                               data['eventLove'],
                                               data['eventLoved'],
-                                              _user
-                                          ));
+                                              _user));
                                     },
                                   )
                                 ],

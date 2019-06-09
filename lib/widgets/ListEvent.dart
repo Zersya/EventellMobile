@@ -10,7 +10,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'CustomSmallButton.dart';
+
 class ListEvent extends StatelessWidget {
+
+  final bool isWaitingTicket;
+
+  const ListEvent({Key key, this.isWaitingTicket}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
 
@@ -21,6 +28,10 @@ class ListEvent extends StatelessWidget {
       return Center(child: SpinKitCubeGrid(color: Coloring.colorMain,));
     }
 
+    if(snapshot.documents.isEmpty){
+      return Center(child: Text("No data!"));
+    }
+
     User _user = User.fromMap(snapshotUser.data);
     return Padding(
       padding: const EdgeInsets.only(
@@ -28,7 +39,6 @@ class ListEvent extends StatelessWidget {
       child: ListView.separated(
         itemCount: snapshot.documents.length,
         shrinkWrap: true,
-        reverse: true,
         physics: ScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           var data = snapshot.documents[index].data;
@@ -102,7 +112,14 @@ class ListEvent extends StatelessWidget {
                                 )
                               ],
                             ),
+                            isWaitingTicket !=null ? CustomSmallButton(
+                              color: Colors.blue[100],
+                              textColor: Colors.black87,
+                              label: 'Upload Bukti',
+                              onPressed: (){
 
+                              },
+                            ) : Divider()
                           ],
                         ),
                       )),

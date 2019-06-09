@@ -1,4 +1,5 @@
 import 'package:eventell/blocs/likes/likes_screen.dart';
+import 'package:eventell/blocs/myticket/myticket_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:eventell/blocs/home/index.dart';
@@ -21,7 +22,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     listPage = [
       HomeScreen(),
-      null,
+      MyTicketScreen(),
       null,
       LikesScreen(),
       ProfileScreen()

@@ -59,11 +59,15 @@ class LoadingGetTicketState extends GetTicketState {
 
 class SubmittedGetTicketState extends GetTicketState {
 
+  final validUntil;
+
+  SubmittedGetTicketState(this.validUntil);
+
   @override
   String toString() => 'SubmittedGetTicketState ';
 
   @override
   GetTicketState getStateCopy() {
-    return SubmittedGetTicketState ();
+    return SubmittedGetTicketState (this.validUntil);
   }
 }
