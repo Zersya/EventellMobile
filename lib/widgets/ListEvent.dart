@@ -14,9 +14,9 @@ import 'CustomSmallButton.dart';
 
 class ListEvent extends StatelessWidget {
 
-  final bool isWaitingTicket;
+  final bool isWaitingTicket, isDetailEvent;
 
-  const ListEvent({Key key, this.isWaitingTicket}) : super(key: key);
+  const ListEvent({Key key, this.isWaitingTicket, this.isDetailEvent}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +32,29 @@ class ListEvent extends StatelessWidget {
       return Center(child: Text("No data!"));
     }
 
+    List<DocumentSnapshot> _snapshotData = snapshot.documents.reversed.toList();
     User _user = User.fromMap(snapshotUser.data);
     return Padding(
       padding: const EdgeInsets.only(
           left: Sizing.paddingContent, right: Sizing.paddingContent),
       child: ListView.separated(
-        itemCount: snapshot.documents.length,
+        itemCount: _snapshotData.length,
         shrinkWrap: true,
         physics: ScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          var data = snapshot.documents[index].data;
+          var data = this.isWaitingTicket
+              ? _snapshotData[index].data['event']:_snapshotData[index].data;
           return GestureDetector(
             onTap: (){
-              Navigator.of(context).pushNamed(Router.detailevent, arguments: {'dataEvent':data, 'dataUser': _user});
+              if(this.isDetailEvent)
+                Navigator.of(context).pushNamed(Router.detailevent, arguments: {
+                  'dataEvent':data,
+                  'dataUser': _user});
+
+              if(this.isWaitingTicket)
+                Navigator.of(context).pushNamed(Router.detailticket, arguments: {
+                  'dataEventTicket':_snapshotData[index].data,
+                  'dataUser': _user});
             },
             child: Card(
               elevation: 8,
@@ -112,7 +122,7 @@ class ListEvent extends StatelessWidget {
                                 )
                               ],
                             ),
-                            isWaitingTicket !=null ? CustomSmallButton(
+                            isWaitingTicket ? CustomSmallButton(
                               color: Colors.blue[100],
                               textColor: Colors.black87,
                               label: 'Upload Bukti',

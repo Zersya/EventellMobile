@@ -33,8 +33,13 @@ class LoadHomeEvent extends HomeEvent {
           .collection('users')
           .document(_user.email)
           .snapshots();
+      
+      Stream<DocumentSnapshot> _streamCategory = Firestore.instance
+          .collection("utility")
+          .document("category")
+          .snapshots();
 
-      return new InHomeState(_user, _streamCurrentUser, _streamListEvent, _streamRecomendedEvent);
+      return new InHomeState(_user, _streamCurrentUser, _streamListEvent, _streamRecomendedEvent, _streamCategory);
     } catch (_) {
       print('LoadHomeEvent ' + _?.toString());
       return new ErrorHomeState(_?.toString());

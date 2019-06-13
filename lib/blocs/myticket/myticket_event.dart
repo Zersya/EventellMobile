@@ -21,9 +21,9 @@ class LoadMyTicketEvent extends MyTicketEvent {
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
-      
-      Stream<QuerySnapshot> _streamTransactionEvent = Firestore.instance.collection("events")
-          .where("orderedEvent", arrayContains: _user.email).snapshots();
+
+      Stream<QuerySnapshot> _streamTransactionEvent = Firestore.instance.collection("users")
+            .document(_user.email).collection("transactionTicket").snapshots();
 
       Stream<DocumentSnapshot> _streamUser = Firestore.instance
           .collection('users')

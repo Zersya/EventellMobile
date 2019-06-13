@@ -13,20 +13,19 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
 class HomeList extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     FirebaseUser _user = Provider.of<FirebaseUser>(context);
     var _userEmail = _user.email.toString().split('@')[0][0].toUpperCase() +
         _user.email.toString().split('@')[0].substring(1);
 
     HomeModel _homeModel = Provider.of<HomeModel>(context);
     Stream<QuerySnapshot> _streamListEvent = _homeModel.streamListEvent;
-    Stream<QuerySnapshot> _streamRecommendedEvent = _homeModel.streamRecommendedEvent;
+    Stream<QuerySnapshot> _streamRecommendedEvent =
+        _homeModel.streamRecommendedEvent;
     Stream<DocumentSnapshot> _streamCurrentUser = _homeModel.streamCurrentUser;
+    Stream<DocumentSnapshot> _streamCategory = _homeModel.streamCategory;
 
     return ListView(
       shrinkWrap: true,
@@ -66,33 +65,34 @@ class HomeList extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              new CircleButtonCategory(
-                  name: 'Category 1', icon: MdiIcons.music),
-              new CircleButtonCategory(
-                  name: 'Category 2', icon: MdiIcons.music),
-              new CircleButtonCategory(
-                  name: 'Category 3', icon: MdiIcons.music),
-              new CircleButtonCategory(
-                  name: 'Category 4', icon: MdiIcons.music),
-              new CircleButtonCategory(
-                  name: 'Category 5', icon: MdiIcons.music),
-            ],
-          ),
+        StreamProvider<DocumentSnapshot>.value(
+          value: _streamCategory,
+          child: Consumer<DocumentSnapshot>(builder: (context, value, child) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  for (var category in value['list'])
+                    CircleButtonCategory(
+                      name: category,
+                      icon: MdiIcons.map,
+                    )
+                ],
+              ),
+            );
+          }),
         ),
         SizedBox(
           height: 10,
         ),
         MultiProvider(
           providers: [
-          StreamProvider<QuerySnapshot>
-              .value(value: _streamRecommendedEvent,),
-          StreamProvider<DocumentSnapshot>
-              .value(value: _streamCurrentUser,),
+            StreamProvider<QuerySnapshot>.value(
+              value: _streamRecommendedEvent,
+            ),
+            StreamProvider<DocumentSnapshot>.value(
+              value: _streamCurrentUser,
+            ),
           ],
           child: HomeRecommended(),
         ),
@@ -101,30 +101,33 @@ class HomeList extends StatelessWidget {
         ),
         MultiProvider(
           providers: [
-            StreamProvider<QuerySnapshot>
-                .value(value: _streamListEvent,),
-            StreamProvider<DocumentSnapshot>
-                .value(value: _streamCurrentUser,),
+            StreamProvider<QuerySnapshot>.value(
+              value: _streamListEvent,
+            ),
+            StreamProvider<DocumentSnapshot>.value(
+              value: _streamCurrentUser,
+            ),
           ],
-          child: ListEvent(),
+          child: ListEvent(
+            isDetailEvent: true,
+            isWaitingTicket: false,
+          ),
         )
-
       ],
     );
   }
 }
 
 class HomeRecommended extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     DocumentSnapshot snapshotUser = Provider.of<DocumentSnapshot>(context);
     QuerySnapshot snapshot = Provider.of<QuerySnapshot>(context);
 
-
-    if(snapshot == null || snapshotUser == null ){
-      return SpinKitCubeGrid(color: Coloring.colorMain,);
+    if (snapshot == null || snapshotUser == null) {
+      return SpinKitCubeGrid(
+        color: Coloring.colorMain,
+      );
     }
     User _user = User.fromMap(snapshotUser.data);
     return SizedBox(
@@ -137,8 +140,9 @@ class HomeRecommended extends StatelessWidget {
           var data = snapshot.documents[index].data;
 
           return GestureDetector(
-            onTap: (){
-              Navigator.of(context).pushNamed(Router.detailevent, arguments: {'dataEvent':data, 'dataUser': _user});
+            onTap: () {
+              Navigator.of(context).pushNamed(Router.detailevent,
+                  arguments: {'dataEvent': data, 'dataUser': _user});
             },
             child: Card(
               shape: RoundedRectangleBorder(
@@ -154,10 +158,11 @@ class HomeRecommended extends StatelessWidget {
                       fit: BoxFit.cover,
                       height: 150,
                       imageUrl: data['eventImage'],
-                      placeholder: (context, url) =>
-                          SpinKitDoubleBounce(color: Coloring.colorMain,),
+                      placeholder: (context, url) => SpinKitDoubleBounce(
+                            color: Coloring.colorMain,
+                          ),
                       errorWidget: (context, url, error) =>
-                      new Icon(Icons.error),
+                          new Icon(Icons.error),
                     ),
                   ),
                   Expanded(
@@ -168,39 +173,58 @@ class HomeRecommended extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(data['eventName'],
-                                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                            Divider(height: 5,),
-                            MoneyFormater(money: data['eventPrice'], textStyle: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
-
-                            Divider(height: 5,),
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold)),
+                            Divider(
+                              height: 5,
+                            ),
+                            MoneyFormater(
+                              money: data['eventPrice'],
+                              textStyle: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.bold),
+                            ),
+                            Divider(
+                              height: 5,
+                            ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Icon(MdiIcons.clockOutline, size: 13.0, color: Coloring.colorMain,),
+                                Icon(
+                                  MdiIcons.clockOutline,
+                                  size: 13.0,
+                                  color: Coloring.colorMain,
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(data['eventDate'] + "\n" + data['eventTime'],
+                                  child: Text(
+                                      data['eventDate'] +
+                                          "\n" +
+                                          data['eventTime'],
                                       style: TextStyle(fontSize: 13.0)),
                                 ),
                               ],
                             ),
-
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Icon(Icons.location_on, size: 13.0, color: Coloring.colorMain,),
+                                Icon(
+                                  Icons.location_on,
+                                  size: 13.0,
+                                  color: Coloring.colorMain,
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width * 0.45,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
                                     child: Text(data['eventAddress'],
                                         style: TextStyle(fontSize: 13.0)),
                                   ),
                                 )
                               ],
                             ),
-
                           ],
                         ),
                       )),
@@ -213,6 +237,3 @@ class HomeRecommended extends StatelessWidget {
     );
   }
 }
-
-
-

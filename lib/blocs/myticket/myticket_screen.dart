@@ -66,7 +66,7 @@ class Tab_2 extends StatelessWidget {
               StreamProvider<DocumentSnapshot>
                   .value(value: currentState.streamUser),
             ],
-            child: ListEvent(isWaitingTicket: true,),
+            child: ListEvent(isWaitingTicket: true, isDetailEvent: false,),
           );
 
         }

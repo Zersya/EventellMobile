@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventell/shared/models/event.dart';
 import 'package:eventell/shared/models/ticket.dart';
 import 'package:eventell/shared/models/transaction.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,7 +36,8 @@ class SubmitTicketEvent extends GetTicketEvent {
           .document().documentID;
 
       TransactionTicket _transactionTicket = TransactionTicket.fromMap({
-        "eventId": event['eventId'],
+        "transactionId": docId,
+        "event": event,
         "validUntil": DateTime.now().add(Duration(days: 3)).millisecondsSinceEpoch,
         "paymentFile": null,
         "isPaid": false,

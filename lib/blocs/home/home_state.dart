@@ -28,16 +28,16 @@ class InHomeState extends HomeState {
   final Stream<DocumentSnapshot> streamCurrentUser;
   final Stream<QuerySnapshot> streamListEvent;
   final Stream<QuerySnapshot> streamRecomendedEvent;
+  final Stream<DocumentSnapshot> streamCategory;
 
-
-  InHomeState(this.user, this.streamCurrentUser, this.streamListEvent, this.streamRecomendedEvent);
+  InHomeState(this.user, this.streamCurrentUser, this.streamListEvent, this.streamRecomendedEvent, this.streamCategory);
 
   @override
   String toString() => 'InHomeState';
 
   @override
   HomeState getStateCopy() {
-    return InHomeState(user, streamCurrentUser, streamListEvent, streamRecomendedEvent);
+    return InHomeState(user, streamCurrentUser, streamListEvent, streamRecomendedEvent, streamCategory);
   }
 }
 

@@ -79,7 +79,8 @@ class HomeScreenState extends State<HomeScreen> {
                           Provider<HomeModel>.value(value: HomeModel(
                               currentState.streamListEvent,
                               currentState.streamRecomendedEvent,
-                              currentState.streamCurrentUser
+                              currentState.streamCurrentUser,
+                              currentState.streamCategory
                           )),
                         ],
                         child: HomeList(),

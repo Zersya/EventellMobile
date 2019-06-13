@@ -21,10 +21,7 @@ class CircleButtonCategory extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: new Icon(
-              this.icon,
-              color: Colors.black,
-            ),
+            child: Center(child: Text(this.name[0], style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),))
           ),
           Text(this.name)
         ],

@@ -1,14 +1,18 @@
+import 'event.dart';
+
 class TransactionTicket {
-  String eventId;
+  String transactionId;
+  Event event;
   int validUntil;
   String paymentFile;
   bool isPaid;
 
-  TransactionTicket({this.eventId, this.validUntil, this.paymentFile, this.isPaid});
+  TransactionTicket({this.transactionId, this.event, this.validUntil, this.paymentFile, this.isPaid});
 
   Map toMap(){
     var map = {
-      'eventId': this.eventId,
+      'transactionId': this.transactionId,
+      'event': this.event.toMap(),
       'validUntil': this.validUntil,
       'paymentFile': this.paymentFile,
       'isPaid': this.isPaid,
@@ -19,7 +23,8 @@ class TransactionTicket {
 
   factory TransactionTicket.fromMap(Map<String, dynamic> map){
     return TransactionTicket(
-      eventId: map['eventId'],
+      transactionId: map['transactionId'],
+      event: Event.fromMap(map['event']),
       validUntil: map['validUntil'],
       paymentFile: map['paymentFile'],
       isPaid: map['isPaid'],
