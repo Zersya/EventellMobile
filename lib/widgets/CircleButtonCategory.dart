@@ -6,25 +6,29 @@ import 'package:flutter/material.dart';
 class CircleButtonCategory extends StatelessWidget {
   final name;
   final icon;
-  const CircleButtonCategory({Key key, this.name, this.icon}) : super(key: key);
+  final onTap;
+  const CircleButtonCategory({Key key, this.name, this.icon, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Sizing.circleCategorySizePadd),
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: Sizing.circleCategorySize,
-            height: Sizing.circleCategorySize,
-            decoration: new BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(Sizing.circleCategorySizePadd),
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: Sizing.circleCategorySize,
+              height: Sizing.circleCategorySize,
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Center(child: Text(this.name[0], style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),))
             ),
-            child: Center(child: Text(this.name[0], style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),))
-          ),
-          Text(this.name)
-        ],
+            Text(this.name)
+          ],
+        ),
       ),
     );
   }

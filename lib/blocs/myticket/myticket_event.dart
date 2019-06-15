@@ -12,6 +12,10 @@ abstract class MyTicketEvent {
 }
 
 class LoadMyTicketEvent extends MyTicketEvent {
+
+  final isPaid;
+
+  LoadMyTicketEvent(this.isPaid);
   
   @override
   String toString() => 'LoadMyTicketEvent';
@@ -21,10 +25,19 @@ class LoadMyTicketEvent extends MyTicketEvent {
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
+      Stream<QuerySnapshot> _streamTransactionEvent;
 
-      Stream<QuerySnapshot> _streamTransactionEvent = Firestore.instance.collection("users")
-            .document(_user.email).collection("transactionTicket").snapshots();
-
+      if(!isPaid) {
+        _streamTransactionEvent = Firestore
+            .instance.collection("users")
+            .document(_user.email).collection("transactionTicket")
+            .where('isPaid', isEqualTo: false).snapshots();
+      }else {
+        _streamTransactionEvent = Firestore.instance
+            .collection("users")
+            .document(_user.email).collection("transactionTicket")
+            .where('isPaid', isEqualTo: true).snapshots();
+      }
       Stream<DocumentSnapshot> _streamUser = Firestore.instance
           .collection('users')
           .document(_user.email)

@@ -14,9 +14,9 @@ import 'CustomSmallButton.dart';
 
 class ListEvent extends StatelessWidget {
 
-  final bool isWaitingTicket, isDetailEvent;
+  final bool isDetailTicket, isDetailEvent, isShowPaidButton;
 
-  const ListEvent({Key key, this.isWaitingTicket, this.isDetailEvent}) : super(key: key);
+  const ListEvent({Key key, this.isDetailTicket, this.isDetailEvent, this.isShowPaidButton}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class ListEvent extends StatelessWidget {
         shrinkWrap: true,
         physics: ScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          var data = this.isWaitingTicket
+          var data = this.isDetailTicket
               ? _snapshotData[index].data['event']:_snapshotData[index].data;
           return GestureDetector(
             onTap: (){
@@ -51,7 +51,7 @@ class ListEvent extends StatelessWidget {
                   'dataEvent':data,
                   'dataUser': _user});
 
-              if(this.isWaitingTicket)
+              if(this.isDetailTicket)
                 Navigator.of(context).pushNamed(Router.detailticket, arguments: {
                   'dataEventTicket':_snapshotData[index].data,
                   'dataUser': _user});
@@ -76,13 +76,13 @@ class ListEvent extends StatelessWidget {
                   Expanded(
                       flex: 2,
                       child: Container(
-                        padding: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(5.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(data['eventName'],
                                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                            Divider(height: 5,),
+                            Divider(height: 15,),
                             Text(FlutterMoneyFormatter(
                                 amount: data['eventPrice'].toDouble(),
                                 settings: MoneyFormatterSettings(
@@ -122,7 +122,7 @@ class ListEvent extends StatelessWidget {
                                 )
                               ],
                             ),
-                            isWaitingTicket ? CustomSmallButton(
+                            isShowPaidButton ? CustomSmallButton(
                               color: Colors.blue[100],
                               textColor: Colors.black87,
                               label: 'Upload Bukti',

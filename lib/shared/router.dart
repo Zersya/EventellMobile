@@ -2,6 +2,7 @@
 import 'package:eventell/blocs/detailevent/detailevent_page.dart';
 import 'package:eventell/blocs/detailmyticket/detailmyticket_page.dart';
 import 'package:eventell/blocs/eventform/eventform_page.dart';
+import 'package:eventell/blocs/filter/filter_page.dart';
 import 'package:eventell/blocs/getticket/getticket_page.dart';
 import 'package:eventell/blocs/myevent/myevent_page.dart';
 import 'package:eventell/blocs/payment/payment_page.dart';
@@ -22,6 +23,8 @@ class Router {
   static const String getticket = '/getticket';
   static const String payment = '/payment';
   static const String detailticket = '/detailticket';
+  static const String filter = '/filter';
+
 
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -71,6 +74,11 @@ class Router {
         return MaterialPageRoute(
             settings: RouteSettings(name: detailticket),
             builder: (_) => DetailMyTicketPage(detailTicket: data,));
+      case filter:
+        final data = settings.arguments;
+        return MaterialPageRoute(
+            settings: RouteSettings(name: filter),
+            builder: (_) => FilterEventPage(data: data));
     }
   }
 }

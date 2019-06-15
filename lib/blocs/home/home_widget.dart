@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeList extends StatelessWidget {
+  TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     FirebaseUser _user = Provider.of<FirebaseUser>(context);
@@ -51,6 +53,7 @@ class HomeList extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(Sizing.paddingContent),
           child: TextFormField(
+            controller: _controller,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                     borderSide: BorderSide.none,
@@ -59,7 +62,9 @@ class HomeList extends StatelessWidget {
                 contentPadding: EdgeInsets.all(15.0),
                 filled: true,
                 fillColor: Colors.white70,
-                suffixIcon: Icon(Icons.search)),
+                suffixIcon: IconButton(icon: Icon(Icons.search), onPressed: (){
+                  Navigator.of(context).pushNamed(Router.filter, arguments: [_controller.text, null]);
+                },)),
           ),
         ),
         SizedBox(
@@ -68,6 +73,9 @@ class HomeList extends StatelessWidget {
         StreamProvider<DocumentSnapshot>.value(
           value: _streamCategory,
           child: Consumer<DocumentSnapshot>(builder: (context, value, child) {
+            if(value == null){
+              return Center(child: SpinKitCubeGrid(color: Coloring.colorMain,));
+            }
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -76,6 +84,9 @@ class HomeList extends StatelessWidget {
                     CircleButtonCategory(
                       name: category,
                       icon: MdiIcons.map,
+                      onTap: (){
+                        Navigator.of(context).pushNamed(Router.filter, arguments: [null, category]);
+                      },
                     )
                 ],
               ),
@@ -110,7 +121,8 @@ class HomeList extends StatelessWidget {
           ],
           child: ListEvent(
             isDetailEvent: true,
-            isWaitingTicket: false,
+            isDetailTicket: false,
+            isShowPaidButton: false,
           ),
         )
       ],

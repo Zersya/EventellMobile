@@ -41,7 +41,7 @@ class _LikesScreenState extends State<LikesScreen> {
               StreamProvider<QuerySnapshot>.value(value: currentState.streamListEvent),
               StreamProvider<DocumentSnapshot>.value(value: currentState.streamCurrentUser)
             ],
-            child: ListEvent(isWaitingTicket: false,isDetailEvent: true,),
+            child: ListEvent(isDetailTicket: false,isDetailEvent: true, isShowPaidButton: false,),
           );
         }
 

@@ -8,20 +8,8 @@ import 'package:provider/provider.dart';
 
 import 'index.dart';
 
-class MyTicketScreen extends StatefulWidget {
-  @override
-  _MyTicketScreenState createState() => _MyTicketScreenState();
-}
+class MyTicketScreen extends StatelessWidget {
 
-class _MyTicketScreenState extends State<MyTicketScreen> {
-
-  MyTicketBloc _myTicketBloc = MyTicketBloc();
-
-  @override
-  void initState() {
-    _myTicketBloc.dispatch(LoadMyTicketEvent());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +17,23 @@ class _MyTicketScreenState extends State<MyTicketScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-            title: Text("My Ticket"),
+          title: Text("My Ticket"),
           bottom: TabBar(
             indicatorColor: Colors.grey,
             tabs: [
-              Tab(child: Text("PURCHASED"),),
-              Tab(child: Text("WAITING"),),
+              Tab(
+                child: Text("PURCHASED"),
+              ),
+              Tab(
+                child: Text("WAITING"),
+              ),
             ],
           ),
         ),
-        body:TabBarView(
+        body: TabBarView(
           children: [
-            Center(child: Icon(Icons.hourglass_empty)),
-            Tab_2(myTicketBloc: _myTicketBloc,)
+            Tab1(),
+            Tab2(),
           ],
         ),
       ),
@@ -49,31 +41,111 @@ class _MyTicketScreenState extends State<MyTicketScreen> {
   }
 }
 
-class Tab_2 extends StatelessWidget {
-  final myTicketBloc;
+class Tab1 extends StatefulWidget{
+  @override
+  _Tab1State createState() => _Tab1State();
+}
 
-  const Tab_2({Key key, this.myTicketBloc}) : super(key: key);
+class _Tab1State extends State<Tab1> {
+  MyTicketBloc _myTicketBloc = MyTicketBloc();
+
+  @override
+  void initState() {
+    _myTicketBloc.dispatch(LoadMyTicketEvent(true));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _myTicketBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MyTicketEvent, MyTicketState>(
-      bloc: myTicketBloc,
-      builder: (context, currentState){
-        if(currentState is InMyTicketState) {
+      bloc: _myTicketBloc,
+      builder: (context, currentState) {
+        if (currentState is InMyTicketState) {
           return MultiProvider(
             providers: [
-              StreamProvider<QuerySnapshot>
-                  .value(value: currentState.streamTransactionEvent),
-              StreamProvider<DocumentSnapshot>
-                  .value(value: currentState.streamUser),
+              StreamProvider<QuerySnapshot>.value(
+                  value: currentState.streamTransactionEvent),
+              StreamProvider<DocumentSnapshot>.value(
+                  value: currentState.streamUser),
             ],
-            child: ListEvent(isWaitingTicket: true, isDetailEvent: false,),
+            child: ListEvent(
+              isDetailTicket: true,
+              isDetailEvent: false,
+              isShowPaidButton: false,
+            ),
           );
-
         }
         return Center(
             child: SpinKitCubeGrid(
-              color: Coloring.colorMain,
-            ));
+          color: Coloring.colorMain,
+        ));
+      },
+    );
+  }
+}
+
+class Tab2 extends StatefulWidget {
+
+  @override
+  _Tab2State createState() => _Tab2State();
+}
+
+class _Tab2State extends State<Tab2> {
+  MyTicketBloc _myTicketBloc = MyTicketBloc();
+
+  @override
+  void initState() {
+    _myTicketBloc.dispatch(LoadMyTicketEvent(false));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _myTicketBloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MyTicketEvent, MyTicketState>(
+      bloc: _myTicketBloc,
+      builder: (context, currentState) {
+        if (currentState is UnMyTicketState) {
+          return Center(
+            child: SpinKitCubeGrid(color: Coloring.colorMain,),
+          );
+        }
+        if (currentState is ErrorMyTicketState) {
+          return new Container(
+              child: new Center(
+                child: new Text(currentState.errorMessage ?? 'Error'),
+              ));
+        }
+        if (currentState is InMyTicketState) {
+          return MultiProvider(
+            providers: [
+              StreamProvider<QuerySnapshot>.value(
+                  value: currentState.streamTransactionEvent),
+              StreamProvider<DocumentSnapshot>.value(
+                  value: currentState.streamUser),
+            ],
+            child: ListEvent(
+              isDetailTicket: true,
+              isDetailEvent: false,
+              isShowPaidButton: true,
+            ),
+          );
+        }
+        return Center(
+            child: SpinKitCubeGrid(
+          color: Coloring.colorMain,
+        ));
       },
     );
   }
