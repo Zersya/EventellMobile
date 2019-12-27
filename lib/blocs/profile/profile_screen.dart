@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eventell/blocs/profile/index.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:avataaar_image/avataaar_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -77,20 +76,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      AvataaarImage(
-                        avatar: currentState is InProfileState
-                            ? currentState.avataaar
-                            : Avataaar.random(),
-                        errorImage: Icon(Icons.error),
-                        placeholder: CircularProgressIndicator(
-                          valueColor:
-                              new AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                        width: 128.0,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
                       buildTextName(currentState),
                     ],
                   ),

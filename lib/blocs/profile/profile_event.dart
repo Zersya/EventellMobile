@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'package:avataaar_image/avataaar_image.dart';
 import 'package:eventell/blocs/login/index.dart';
 import 'package:eventell/blocs/myevent/myevent_bloc.dart';
 import 'package:eventell/blocs/myevent/myevent_event.dart';
-import 'package:eventell/blocs/myevent/myevent_state.dart';
 import 'package:eventell/blocs/profile/index.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,9 +22,9 @@ class LoadProfileEvent extends ProfileEvent {
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser _user = await _auth.currentUser();
-      var _avataaar =  Avataaar.random();
+      // var _avataaar =  Avataaar.random();
 
-      return new InProfileState(_user, _avataaar);
+      return new InProfileState(_user, null);
     } catch (_) {
       print('LoadProfileEvent ' + _?.toString());
       return new ErrorProfileState(_?.toString());
